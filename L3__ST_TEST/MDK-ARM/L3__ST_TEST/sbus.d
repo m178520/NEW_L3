@@ -1,0 +1,16 @@
+l3__st_test\sbus.o: ..\Core\Src\sbus.c
+l3__st_test\sbus.o: ../Core/Inc/sbus.h
+l3__st_test\sbus.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\stdint.h
+l3__st_test\sbus.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\string.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+l3__st_test\sbus.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\stddef.h
+l3__st_test\sbus.o: ../Core/Inc/FreeRTOSConfig.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+l3__st_test\sbus.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h

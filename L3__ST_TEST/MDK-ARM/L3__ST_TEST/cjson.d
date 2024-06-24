@@ -1,0 +1,10 @@
+l3__st_test\cjson.o: ..\cJSON\Src\cJSON.c
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\string.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\stdio.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\math.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\stdlib.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\limits.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\ctype.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\float.h
+l3__st_test\cjson.o: ../cJSON/Inc/cJSON.h
+l3__st_test\cjson.o: E:\keil5\IDE\ARM\ARMCC\Bin\..\include\stddef.h
