@@ -56,12 +56,12 @@ void Error_Handler(void);
 typedef enum  
 {
 	Poweron,
-	Job_Wait,
-	Job_Working,
-	Job_Pause,
-	Job_Finish,
-	Job_Return,
-	Job_Block,
+	Job_Wait    = 1500,
+	Job_Working = 1501,
+	Job_Pause   = 1502,
+	Job_Finish  = 1503,
+	Job_Return  = 1504,
+	Job_Block   = 1541,
 	Poweroff
 }Device_Run_status_t;
 

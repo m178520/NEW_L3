@@ -10,7 +10,7 @@ extern osMessageQueueId_t uart4_send_semp_queueHandle;
 extern osMessageQueueId_t VCU_recv_semp_queueHandle;
 extern osMessageQueueId_t VCU_send_semp_queueHandle;
 
-extern osMessageQueueId_t HTTP_REQUEST_queueHandle;;
+extern osMessageQueueId_t HTTP_REQUEST_queueHandle;
 extern osEventFlagsId_t Device_Run_status_eventHandle;
 
 char Imei[30];
@@ -65,6 +65,7 @@ void uart4_rec_data_apply(uint8_t *data,uint16_t len)
 			{
 				USART_Imei_data(EC600U_MQTT_RECV_STATUS);
 				HAL_GPIO_WritePin(GPIOC,  GPIO_PIN_4, GPIO_PIN_RESET);
+				while(HAL_GPIO_ReadPin(GPIOC,  GPIO_PIN_4) == GPIO_PIN_RESET);
 				osEventFlagsSet(Device_Run_status_eventHandle,BIT_2);       //设置联网成功标志位
 				osEventFlagsSet(Device_Run_status_eventHandle,BIT_1);       //设置上电成功标志位
 				/*开始鉴权操作*/

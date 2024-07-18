@@ -6,6 +6,7 @@
 #include "tim.h"
 #include "gps.h"
 
+
 MQTT_Task_Msg_t MQT_Base_Msg = {0};
 MQTT_Task_Msg_t MQTT_self_Base_Msg = {0};
 
@@ -65,15 +66,16 @@ void APP_Info_Submit()
 	char *trans_Msg=NULL;
 	char q[1300] = {0};
 	/*修改上报信息值*/
-		/*进入临界区*/
+	/*进入临界区*/
 	taskENTER_CRITICAL();
-
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lon,NULL),"property","lon");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lat,NULL),"property","lat");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.CourseAngle,NULL),"property","yaw");
-			/*退出临界区*/
+	/*退出临界区*/
 	taskEXIT_CRITICAL();
+	
 	trans_Msg = ObjectToString(EC600U_MQTT_SEND_STATUS);
+	
 	if(trans_Msg != NULL)
 	{
 		/*修改上报MQTT的数据*/
@@ -106,35 +108,37 @@ void USART_MQTT_data(cJSON * object)
 		Type = cJSON_GetObjectItemCaseSensitive(Msg,"type");
 		if(cJSON_IsNumber(Type)&&(Type->valueint != NULL ))
 		{
+			
 			switch(Type->valueint)
 			{
-				case 2000://删除设备
+				case Delete_dev://删除设备
 					
 					break;
-				case 2001: //启动任务
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+				case Start_dev: //启动任务
+					
 					if(cJSON_IsObject(Data)&&(Data != NULL ))
 					{
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
 						MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
 						MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
 						BIT = BIT_1;
 						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 					}
 					break;
-				case 2002: //暂停任务
+				case Pause_dev: //暂停任务
 //					cJSON_GetObjectItemCaseSensitive(EC600U_HTTP_jobPause,"progress") ->valueint = progress;
-					BIT = BIT_2;	
+					BIT = BIT_2;
 					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 					break;
-				case 2003: //继续任务
+				case Continue_dev: //继续任务
 					
 						MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
 						MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-					BIT = BIT_3;		
-					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+						BIT = BIT_3;		
+						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 					
 					break;
-				case 2004: //一键召回
+				case Return_dev: //一键召回
 					MQTT_Return_Task_ZoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
 					BIT = BIT_6;	
 					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);

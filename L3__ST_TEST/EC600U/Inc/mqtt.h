@@ -11,6 +11,19 @@
 #define MQTT_APP_NAME         "xzb"
 #define MQTT_APP_PASSWORD     "sdXzb2023#"
 
+typedef enum{
+	Delete_dev = 2000,
+	Start_dev,
+	Pause_dev,
+	Continue_dev,
+	Return_dev,
+	Cutter_height,
+	Safe_zone_detect,
+	Modify_safe_zone,
+	Light_control,
+	Cutter_control
+}MQTT_Control_t;
+
 /*MQTT–≈œ¢*/
 typedef struct{
 	char ip[30];

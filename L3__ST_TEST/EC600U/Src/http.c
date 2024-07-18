@@ -1,6 +1,8 @@
 #include "http.h"
 #include "cmsis_os.h"
 #include "main.h"
+#include "nav.h"
+#include "gps.h"
 
 Authen_info_t Authen_info ={0};
 HTTP_task_t   HTTP_Task_Msg ={0};
@@ -15,13 +17,15 @@ extern osEventFlagsId_t Device_unusual_status_eventHandle;
 extern void EC600U_send_msg(char* Name,char* fun,char *Source,uint16_t len);
 
 extern uint32_t EC600U_REC_block_time;
+
 extern cJSON * EC600U_MQTT_SEND_STATUS;
+
 
 extern osMessageQueueId_t uart4_recv_semp_queueHandle;
 extern osMessageQueueId_t HTTP_REQUEST_queueHandle;
 
 
-uint8_t request_num = 0;
+uint8_t request_num = 0; //用于出现错误时进行计数，多次错误报错
 
 void HTTP_get(char* url,char* data,char *Header)
 {
@@ -68,6 +72,13 @@ void HTTP_jobPause_Request(void)
 {
 	char Header[150];
 	char *trans_Msg;
+	
+	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",strtod(gnss.Lat,NULL),"pauseLat"); 
+	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",strtod(gnss.Lon,NULL),"pauseLon");
+	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"progress");
+	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.current_toindex,"targetIndex");
+	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
+	
 	trans_Msg = ObjectToString(EC600U_HTTP_jobPause);
 	if(trans_Msg != NULL)
 	{
@@ -102,6 +113,14 @@ void HTTP_updateRoute_Request(void)
 {
 	char Header[150];
 	char *trans_Msg;
+	
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"process");  /* 暂时未想好怎么写 */
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"size");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.current_toindex,"tarIndex");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
+	
 	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
 	if(trans_Msg != NULL)
 	{
@@ -146,7 +165,7 @@ void USART_HTTP_data(cJSON * object)
 			/*暂停任务请求*/
 			else if(strstr(cJSON_GetObjectItemCaseSensitive(object,"url")->valuestring,"jobPause"))
 			{
-
+				USART_HTTP_jobPause_data(Msg);
 			}
 				
 			/*继续任务请求*/
@@ -158,7 +177,7 @@ void USART_HTTP_data(cJSON * object)
 			/*任务完成请求*/
 			else if(strstr(cJSON_GetObjectItemCaseSensitive(object,"url")->valuestring,"jobFinish"))
 			{
-
+				USART_HTTP_jobFinish_data(Msg);
 			}
 			
 			/*获取分段航点请求*/
@@ -336,38 +355,77 @@ void USART_HTTP_jobContinue_data(cJSON * object)
 				Data = cJSON_GetObjectItemCaseSensitive(object,"data");
 				if(cJSON_IsObject(Data)&&(Data != NULL ))
 				{
-					HTTP_Task_Msg.zoneId      = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-					HTTP_Task_Msg.taskId      = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
+//					HTTP_Task_Msg.zoneId      = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
+//					HTTP_Task_Msg.taskId      = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
 					strcpy(HTTP_Task_Msg.waypoints, cJSON_GetObjectItemCaseSensitive(Data,"waypoints")->valuestring);
 					HTTP_Task_Msg.targetIndex = cJSON_GetObjectItemCaseSensitive(Data,"targetIndex")->valueint;
-					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
-					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
+//					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
+//					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
+					
+					/*进行状态变换*/
+					Device_Run_Status.Alterstatus = Job_Working;
+					osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
 				}
 		}
 		else  printf("请求失败\r\n");
+}
+
+/*串口HTTP 暂停任务请求*/
+void USART_HTTP_jobPause_data(cJSON * object)
+{
+	cJSON * Status ={0};
+	/*判断是否请求成功*/
+	Status = cJSON_GetObjectItemCaseSensitive(object,"code");
+	if(cJSON_IsNumber(Status)&&Status->valueint == 100)
+	{
+		request_num = 0;
+
+		/*进行状态变换*/
+		Device_Run_Status.Alterstatus = Job_Pause;
+		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
+	}
+	else  printf("请求失败\r\n");
+}
+
+/*串口HTTP 完成任务请求*/
+void USART_HTTP_jobFinish_data(cJSON * object)
+{
+	cJSON * Status ={0};
+	/*判断是否请求成功*/
+	Status = cJSON_GetObjectItemCaseSensitive(object,"code");
+	if(cJSON_IsNumber(Status)&&Status->valueint == 100)
+	{
+		request_num = 0;
+
+		/*进行状态变换*/
+		Device_Run_Status.Alterstatus = Job_Wait;
+		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
+	}
+	else  printf("请求失败\r\n");
 }
 
 void USART_HTTP_updateRoute_data(cJSON * object)
 {
 	cJSON * Status ={0};
 	cJSON * Data ={0};
-		/*判断是否请求成功*/
-		Status = cJSON_GetObjectItemCaseSensitive(object,"code");
-		if(cJSON_IsNumber(Status)&&Status->valueint == 100)
-		{
-				request_num = 0;
-				Data = cJSON_GetObjectItemCaseSensitive(object,"data");
-				if(cJSON_IsObject(Data)&&(Data != NULL ))
-				{
-					HTTP_Task_Msg.zoneId      = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-					HTTP_Task_Msg.taskId      = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
-					strcpy(HTTP_Task_Msg.waypoints, cJSON_GetObjectItemCaseSensitive(Data,"waypoints")->valuestring);
-					HTTP_Task_Msg.targetIndex = cJSON_GetObjectItemCaseSensitive(Data,"targetIndex")->valueint;
-					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
-					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
-				}
-		}
-		else  printf("请求失败\r\n");
+	/*判断是否请求成功*/
+	Status = cJSON_GetObjectItemCaseSensitive(object,"code");
+	if(cJSON_IsNumber(Status)&&Status->valueint == 100)
+	{
+			request_num = 0;
+			Data = cJSON_GetObjectItemCaseSensitive(object,"data");
+			if(cJSON_IsObject(Data)&&(Data != NULL ))
+			{
+//					HTTP_Task_Msg.zoneId      = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
+//					HTTP_Task_Msg.taskId      = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
+				strcpy(HTTP_Task_Msg.waypoints, cJSON_GetObjectItemCaseSensitive(Data,"waypoints")->valuestring);
+				HTTP_Task_Msg.targetIndex = cJSON_GetObjectItemCaseSensitive(Data,"targetIndex")->valueint;
+//					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
+//					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
+				waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
+			}
+	}
+	else  printf("请求失败\r\n");
 }
 
 void USART_HTTP_goToCharge_data(cJSON * object)
@@ -384,6 +442,10 @@ void USART_HTTP_goToCharge_data(cJSON * object)
 			{
 				Charge_info.chargeId = cJSON_GetObjectItemCaseSensitive(Data,"chargeId")->valueint;
 				strcpy(Charge_info.navWaypoints, cJSON_GetObjectItemCaseSensitive(Data,"chargeId")->valuestring);
+				
+				/*进行状态变换*/
+			Device_Run_Status.Alterstatus = Job_Return;
+			osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
 			}
 	}
 	else  printf("请求失败\r\n");

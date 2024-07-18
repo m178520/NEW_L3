@@ -59,3 +59,7 @@ l3__st_test\http.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h
 l3__st_test\http.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 l3__st_test\http.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 l3__st_test\http.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+l3__st_test\http.o: ../NAV/Inc/nav.h
+l3__st_test\http.o: ../Arithmetic/WGS84transform/WGS84ToAngle.h
+l3__st_test\http.o: ../GeographicLib-C-2.1/geodesic.h
+l3__st_test\http.o: ../EC600U/Inc/gps.h

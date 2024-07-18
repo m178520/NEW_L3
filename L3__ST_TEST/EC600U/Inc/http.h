@@ -5,7 +5,7 @@
 #include "mqtt.h"
 
 
-#define BASE_URL      "http://dev.server.sdxinzuobiao.com:10006/embedded"
+#define BASE_URL        "http://dev.server.sdxinzuobiao.com:10006/embedded"
 #define AUTHEN_URL      "http://dev.server.sdxinzuobiao.com:10006/embedded/authentication"
 #define JOBSTART_URL    "http://dev.server.sdxinzuobiao.com:10006/embedded/jobStart"
 #define JOBPAUSE_URL    "http://dev.server.sdxinzuobiao.com:10006/embedded/jobPause"
@@ -54,6 +54,8 @@ void USART_HTTP_data(cJSON * object);
 /*串口HTTP数据来源函数*/
 void USART_HTTP_Authen_data(cJSON * object);
 void USART_HTTP_jobStart_data(cJSON * object);
+void USART_HTTP_jobPause_data(cJSON * object);
+void USART_HTTP_jobFinish_data(cJSON * object);
 void USART_HTTP_jobContinue_data(cJSON * object);
 void USART_HTTP_updateRoute_data(cJSON * object);
 void USART_HTTP_goToCharge_data(cJSON * object);

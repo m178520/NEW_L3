@@ -294,7 +294,17 @@ cJSON * Json_data_Change( cJSON *item,char const* const_Format, ...)
 
 	return new_item;
 }
-/*json数值获取*/
+/**
+
+ *json数值获取
+ * @param  item                 要修改的json结构体 
+ *
+ * @param  const_Format         “%s%c%d%f” 第1位：修改为数据的格式    第2~n位：json每一层的名称的格式 如果有3层就写4个%
+ *
+ * @param  ...                  第一位为要修改的值，后面的为json每一层的名称
+ *
+ * @return  返回分割后字符串个数
+*/
 void Json_data_Receive(cJSON *item,char const* const_Format, ...)
 {
 	

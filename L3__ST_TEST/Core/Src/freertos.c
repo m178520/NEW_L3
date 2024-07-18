@@ -377,22 +377,26 @@ void Power_Check_task(void *argument)
 		{
 			if(control_powerFlag == 1)
 			{
-				if(HAL_GPIO_ReadPin(GPIOE,  GPIO_PIN_2) != GPIO_PIN_SET) 
-				{
-					HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_2, GPIO_PIN_SET);
+				
+				
+				HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_2, GPIO_PIN_SET);
+				while(HAL_GPIO_ReadPin(GPIOE,  GPIO_PIN_2) != GPIO_PIN_SET);
 //					osDelay(5000);
-					//开启串口空闲DMA空闲中断
-					HAL_UARTEx_ReceiveToIdle_DMA(&huart4, UART4RxData[UART4_fifo.usRxWrite],UART4_Max_Rxbuf_size);
-					HAL_SPI_Receive_DMA(&hspi1 , SPI1RxData[SPI1_fifo.usRxWrite] ,180 );
-				}
-				if(HAL_GPIO_ReadPin(GPIOC,  GPIO_PIN_4) != GPIO_PIN_SET)  HAL_GPIO_WritePin(GPIOC,  GPIO_PIN_4, GPIO_PIN_SET);
+				//开启串口空闲DMA空闲中断
+				HAL_UARTEx_ReceiveToIdle_DMA(&huart4, UART4RxData[UART4_fifo.usRxWrite],UART4_Max_Rxbuf_size);
+				HAL_SPI_Receive_DMA(&hspi1 , SPI1RxData[SPI1_fifo.usRxWrite] ,180 );
+			  HAL_GPIO_WritePin(GPIOC,  GPIO_PIN_4, GPIO_PIN_SET);
+				while(HAL_GPIO_ReadPin(GPIOC,  GPIO_PIN_4) != GPIO_PIN_SET);
 			}
 			else
 			{
 				HAL_GPIO_WritePin(GPIOC,  GPIO_PIN_4, GPIO_PIN_SET);
-				osDelay(8000);
+				while(HAL_GPIO_ReadPin(GPIOC,  GPIO_PIN_4) != GPIO_PIN_SET);
+				osDelay(5000);
 				HAL_GPIO_WritePin(GPIOC,  GPIO_PIN_4, GPIO_PIN_RESET);
+				while(HAL_GPIO_ReadPin(GPIOC,  GPIO_PIN_4) != GPIO_PIN_RESET);
 				HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_2, GPIO_PIN_RESET);
+				while(HAL_GPIO_ReadPin(GPIOE,  GPIO_PIN_2) != GPIO_PIN_RESET);
 			}
 			power_count++;
 		}
@@ -663,7 +667,7 @@ void Device_Run_task(void *argument)
 		
 			if( (uxBits & ( BIT_1 | BIT_3 | BIT_4 | BIT_5 | BIT_23))  == ( BIT_1 | BIT_3 | BIT_4 | BIT_5 | BIT_23)) //是否满足启动的条件
 			{
-				if(Device_Run_Status.Curstatus == Job_Working)                                                      //是否完成了可工作的准备
+				if(Device_Run_Status.Curstatus == Job_Working || Device_Run_Status.Curstatus == Job_Return)                                                      //是否完成了可工作的准备
 				{
 					err = osSemaphoreAcquire (GPS_rec_exec_sempHandle, 100);
 					if(err == osOK)
@@ -721,27 +725,158 @@ void Device_unusual_task(void *argument)
 		}
 		else if( (uxBits & BIT_1)  != 0 )          //状态变化
 		{
-			if(Device_Run_Status.Curstatus == Job_Wait) // 如果是等待阶段转换为工作阶段
+			switch(Device_Run_Status.Curstatus)
 			{
-				/*先将从http拿到的航点进行分割*/
-				waypoints_Parse(HTTP_Task_Msg.waypoints,",");
-				/*设置当前状态*/
-				Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-				Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-				/*设置第23位让设备可以启动*/
-				osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);
+				case Job_Wait:  //当前状态为空闲，只会进入到作业中 只会从http中获取航线并解析
+					/*先将从http拿到的航点进行分割*/
+					waypoints_Parse(HTTP_Task_Msg.waypoints,",");
+					/*设置当前状态*/
+					Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+					Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+					/*告诉APP我们状态变化了*/
+					/*进入临界区*/
+					taskENTER_CRITICAL();
+
+					Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+					/*退出临界区*/
+					taskEXIT_CRITICAL();
+					
+					/*设置第23位让设备可以启动*/
+					osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);
+				break;
 				
-			}
-			else if(Device_Run_Status.Curstatus == Job_Working) //工作阶段转换为 或任务暂停 或任务完成 或障碍物阻塞
-			{
-				
-			}
-			else
-			{
-				
+				case Job_Working: //正在工作状态可以转化成为停止（空闲），作业暂停，作业完成，召回,遇到障碍物等
+					switch(Device_Run_Status.Alterstatus)
+					{
+						case Job_Wait   :
+							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
+							/*设置当前状态*/
+							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+							
+							NAV_Control_Param_clear(); 
+						
+							/*上传APP状态信息*/
+							/*进入临界区*/
+							taskENTER_CRITICAL();
+							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+							/*退出临界区*/
+							taskEXIT_CRITICAL();
+						break;
+						case Job_Pause  : //正在工作状态转化成暂停状态
+							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
+							/*设置当前状态*/
+							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+							
+							/*上传APP状态信息*/
+							/*进入临界区*/
+							taskENTER_CRITICAL();
+							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+							/*退出临界区*/
+							taskEXIT_CRITICAL();
+						break;
+//						case Job_Finish : 
+//							/*设置当前状态*/
+//							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+//							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+//							
+//							/*上传APP状态信息*/
+//							/*进入临界区*/
+//							taskENTER_CRITICAL();
+//							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+//							/*退出临界区*/
+//							taskEXIT_CRITICAL();
+//						
+//							Device_Run_Status.Curstatus = Job_Wait;
+//						break;
+						case Job_Return :  //正在工作状态转变为召回状态
+							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
+							/*设置当前状态*/
+							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+							
+							NAV_Control_Param_clear(); 
+						
+							/*将从http拿到的航点进行分割*/
+							waypoints_Parse(HTTP_Task_Msg.waypoints,",");
+						
+							/*上传APP状态信息*/
+							/*进入临界区*/
+							taskENTER_CRITICAL();
+							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+							/*退出临界区*/
+							taskEXIT_CRITICAL();
+						break;
+						case Job_Block  :   break; //暂时不写
+						default:            break;
+					}
+				  break;
+				case Job_Pause:  //正在暂停状态可以更换为作业中，召回两个状态   
+					switch(Device_Run_Status.Alterstatus)
+					{
+						case Job_Wait   :   break;
+						case Job_Working: //正在暂停状态变换为作业状态
+							/*设置当前状态*/
+							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+							
+							NAV_Control_Param_clear(); 
+						
+							waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
+						
+							/*上传APP状态信息*/
+							/*进入临界区*/
+							taskENTER_CRITICAL();
+							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+							/*退出临界区*/
+							taskEXIT_CRITICAL();
+						break;
+						case Job_Return :  
+							/*设置当前状态*/
+							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+							
+							NAV_Control_Param_clear(); 
+						
+							/*将从http拿到的航点进行分割*/
+							waypoints_Parse(HTTP_Task_Msg.waypoints,",");
+						
+							/*上传APP状态信息*/
+							/*进入临界区*/
+							taskENTER_CRITICAL();
+							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+							/*退出临界区*/
+							taskEXIT_CRITICAL();
+						break;
+						case Job_Block  :   break;
+						default:            break;
+					}
+					break;
+//				case Job_Finish     ://只能转换到空闲状态        
+//					
+//				break;
+				case Job_Return     ://只能转换到空闲        
+					osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
+							/*设置当前状态*/
+							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
+							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
+							
+							NAV_Control_Param_clear(); 
+						
+							/*上传APP状态信息*/
+							/*进入临界区*/
+							taskENTER_CRITICAL();
+							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
+							/*退出临界区*/
+							taskEXIT_CRITICAL();
+				break;
+				case Job_Block      :        break;  //太复杂，等会再说
+				default:                     break;
 			}
 			
 		}
+		
 		else if( (uxBits & BIT_2)  != 0 )          //RTK失去信号
 		{
 			osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
@@ -800,7 +935,7 @@ void VCU_send_task(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		err = osSemaphoreAcquire (CAN_send_sempHandle, 25);
+		err = osSemaphoreAcquire (CAN_send_sempHandle, 30);
 		if(err == osOK)
 		{
 			/* 发送信息 */
