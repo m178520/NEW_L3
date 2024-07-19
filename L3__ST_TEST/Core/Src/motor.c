@@ -30,7 +30,7 @@ CAN_Msg_t Direct_Drive_motor(int16_t RSpeed, int16_t LSpeed)
 	int32_t LiftSpeed  = 0;
 	if(controlFlag == NALCont)
 	{	
-		RightSpeed = -(int)sbus_to_range(RSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
+		RightSpeed = (int)sbus_to_range(RSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
 		LiftSpeed  = -(int)sbus_to_range(LSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
 		
 		if(RightSpeed <= 30 && RightSpeed >= -30)
@@ -67,7 +67,7 @@ CAN_Msg_t Direct_Drive_motor(int16_t RSpeed, int16_t LSpeed)
 	}
 	if(controlFlag == sbusCont)
 	{
-		RightSpeed = (int)sbus_to_range(RSpeed,  CANSpeedLow, CANSpeedHigh, SbusLow, SbusHigh);
+		RightSpeed = -(int)sbus_to_range(RSpeed,  CANSpeedLow, CANSpeedHigh, SbusLow, SbusHigh);
 		LiftSpeed  = -(int)sbus_to_range(LSpeed, CANSpeedLow, CANSpeedHigh, SbusLow, SbusHigh);
 		
 		if(RightSpeed < 50 && RightSpeed > -50)

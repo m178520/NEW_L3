@@ -377,8 +377,6 @@ void Power_Check_task(void *argument)
 		{
 			if(control_powerFlag == 1)
 			{
-				
-				
 				HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_2, GPIO_PIN_SET);
 				while(HAL_GPIO_ReadPin(GPIOE,  GPIO_PIN_2) != GPIO_PIN_SET);
 //					osDelay(5000);
