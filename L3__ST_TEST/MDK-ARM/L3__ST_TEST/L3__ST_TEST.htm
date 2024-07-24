@@ -3,7 +3,7 @@
 <title>Static Call Graph - [L3__ST_TEST\L3__ST_TEST.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image L3__ST_TEST\L3__ST_TEST.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Jul 19 15:59:18 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Jul 24 10:40:34 2024
 <BR><P>
 <H3>Maximum Stack Usage =       2096 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -708,9 +708,9 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Direct_Drive_motor
 <LI><a href="#[1cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sbus_parse
 <LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart4_send_data_apply
+<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EventRecordData
 <LI><a href="#[25d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataToQueue
 <LI><a href="#[25c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataFromQueue
-<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EventRecordData
 </UL>
 
 <P><STRONG><a name="[131]"></a>__aeabi_memcpy4</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, memcpy.o(.text))
@@ -2344,7 +2344,7 @@ Global Symbols
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
 </UL>
 
-<P><STRONG><a name="[a9]"></a>Power_Check_task</STRONG> (Thumb, 202 bytes, Stack size 0 bytes, freertos.o(i.Power_Check_task))
+<P><STRONG><a name="[a9]"></a>Power_Check_task</STRONG> (Thumb, 210 bytes, Stack size 0 bytes, freertos.o(i.Power_Check_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 100<LI>Call Chain = Power_Check_task &rArr; HAL_UARTEx_ReceiveToIdle_DMA &rArr; UART_Start_Receive_DMA &rArr; HAL_DMA_Start_IT &rArr; DMA_SetConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
@@ -2695,7 +2695,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart4_rec_data_apply
 </UL>
 
-<P><STRONG><a name="[1ed]"></a>USART_MQTT_data</STRONG> (Thumb, 600 bytes, Stack size 32 bytes, mqtt.o(i.USART_MQTT_data))
+<P><STRONG><a name="[1ed]"></a>USART_MQTT_data</STRONG> (Thumb, 668 bytes, Stack size 32 bytes, mqtt.o(i.USART_MQTT_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = USART_MQTT_data &rArr; RTK_L1_open &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
@@ -3074,8 +3074,7 @@ Global Symbols
 <P><STRONG><a name="[2af]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[1f8]"></a>__set_errno</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, errno.o(i.__set_errno))
-<BR><BR>[Called By]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[201]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
+<BR><BR>[Called By]<UL><LI><a href="#[201]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
 <LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sin
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_remquo
@@ -3083,6 +3082,7 @@ Global Symbols
 <LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_hypot
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cos
 <LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atanh
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 <LI><a href="#[1fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_log1p
 </UL>
 
@@ -3233,10 +3233,10 @@ Global Symbols
 <P><STRONG><a name="[1f5]"></a>fabs</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, fabs.o(i.fabs))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fabs
 </UL>
-<BR>[Called By]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
+<BR>[Called By]<UL><LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan
 <LI><a href="#[215]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compare_double
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_remquo
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 <LI><a href="#[1fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee754_rem_pio2
 </UL>
 
@@ -5130,11 +5130,11 @@ Local Symbols
 <P><STRONG><a name="[fb]"></a>Astroid</STRONG> (Thumb, 326 bytes, Stack size 64 bytes, geodesic.o(i.Astroid))
 <BR><BR>[Stack]<UL><LI>Max Depth = 248<LI>Call Chain = Astroid &rArr; __hardfp_cos &rArr; __ieee754_rem_pio2 &rArr; fabs
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
+<BR>[Calls]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
 <LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cos
 <LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cbrt
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InverseStart
 </UL>
@@ -5192,9 +5192,9 @@ Local Symbols
 <P><STRONG><a name="[1a4]"></a>Init</STRONG> (Thumb, 148 bytes, Stack size 8 bytes, geodesic.o(i.Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = Init &rArr; __hardfp_atan2 &rArr; atan &rArr; __hardfp_atan &rArr; fabs
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
+<BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 <LI><a href="#[1a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_nan
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;geod_init
 </UL>
@@ -5202,8 +5202,7 @@ Local Symbols
 <P><STRONG><a name="[1a6]"></a>InverseStart</STRONG> (Thumb, 1294 bytes, Stack size 336 bytes, geodesic.o(i.InverseStart))
 <BR><BR>[Stack]<UL><LI>Max Depth = 624<LI>Call Chain = InverseStart &rArr; Lengths &rArr; C2f
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
+<BR>[Calls]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
 <LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;norm2
 <LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lengths
 <LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Astroid
@@ -5214,6 +5213,7 @@ Local Symbols
 <LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_hypot
 <LI><a href="#[1ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_fmax
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cos
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;geod_geninverse_int
 </UL>
@@ -5221,8 +5221,7 @@ Local Symbols
 <P><STRONG><a name="[1b0]"></a>Lambda12</STRONG> (Thumb, 840 bytes, Stack size 336 bytes, geodesic.o(i.Lambda12))
 <BR><BR>[Stack]<UL><LI>Max Depth = 624<LI>Call Chain = Lambda12 &rArr; Lengths &rArr; C2f
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
+<BR>[Calls]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
 <LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;norm2
 <LI><a href="#[1b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SinCosSeries
 <LI><a href="#[1a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lengths
@@ -5231,6 +5230,7 @@ Local Symbols
 <LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 <LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_hypot
 <LI><a href="#[1ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_fmax
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;geod_geninverse_int
 </UL>
@@ -5262,8 +5262,8 @@ Local Symbols
 <P><STRONG><a name="[209]"></a>atan2dx</STRONG> (Thumb, 166 bytes, Stack size 40 bytes, geodesic.o(i.atan2dx))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = atan2dx &rArr; __hardfp_atan2 &rArr; atan &rArr; __hardfp_atan &rArr; fabs
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;swapx
+<BR>[Calls]<UL><LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;swapx
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[219]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;geod_geninverse
 </UL>
@@ -5271,8 +5271,7 @@ Local Symbols
 <P><STRONG><a name="[21a]"></a>geod_geninverse_int</STRONG> (Thumb, 3104 bytes, Stack size 528 bytes, geodesic.o(i.geod_geninverse_int))
 <BR><BR>[Stack]<UL><LI>Max Depth = 1152<LI>Call Chain = geod_geninverse_int &rArr; Lambda12 &rArr; Lengths &rArr; C2f
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
-<LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;swapx
+<BR>[Calls]<UL><LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;swapx
 <LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sq
 <LI><a href="#[21e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sincosdx
 <LI><a href="#[21b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sincosde
@@ -5290,6 +5289,7 @@ Local Symbols
 <LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_hypot
 <LI><a href="#[1ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_fmax
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cos
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atan2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[219]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;geod_geninverse
 </UL>

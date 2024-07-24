@@ -115,7 +115,7 @@ osThreadId_t HTTP_REQUESTHandle;
 const osThreadAttr_t HTTP_REQUEST_attributes = {
   .name = "HTTP_REQUEST",
   .stack_size = 300 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityBelowNormal7,
 };
 /* Definitions for APP_Info_Submit */
 osThreadId_t APP_Info_SubmitHandle;
@@ -379,7 +379,7 @@ void Power_Check_task(void *argument)
 			{
 				HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_2, GPIO_PIN_SET);
 				while(HAL_GPIO_ReadPin(GPIOE,  GPIO_PIN_2) != GPIO_PIN_SET);
-//					osDelay(5000);
+					osDelay(5000);
 				//¿ªÆô´®¿Ú¿ÕÏÐDMA¿ÕÏÐÖÐ¶Ï
 				HAL_UARTEx_ReceiveToIdle_DMA(&huart4, UART4RxData[UART4_fifo.usRxWrite],UART4_Max_Rxbuf_size);
 				HAL_SPI_Receive_DMA(&hspi1 , SPI1RxData[SPI1_fifo.usRxWrite] ,180 );

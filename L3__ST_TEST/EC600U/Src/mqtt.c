@@ -108,17 +108,16 @@ void USART_MQTT_data(cJSON * object)
 		Type = cJSON_GetObjectItemCaseSensitive(Msg,"type");
 		if(cJSON_IsNumber(Type)&&(Type->valueint != NULL ))
 		{
-			
+			printf("%x",Type->valueint);
 			switch(Type->valueint)
 			{
 				case Delete_dev://删除设备
 					
 					break;
 				case Start_dev: //启动任务
-					
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
 					if(cJSON_IsObject(Data)&&(Data != NULL ))
 					{
-						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
 						MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
 						MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
 						BIT = BIT_1;
