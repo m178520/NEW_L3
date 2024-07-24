@@ -114,7 +114,7 @@ const osThreadAttr_t EC600U_REC_attributes = {
 osThreadId_t HTTP_REQUESTHandle;
 const osThreadAttr_t HTTP_REQUEST_attributes = {
   .name = "HTTP_REQUEST",
-  .stack_size = 300 * 4,
+  .stack_size = 400 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal7,
 };
 /* Definitions for APP_Info_Submit */
@@ -122,7 +122,7 @@ osThreadId_t APP_Info_SubmitHandle;
 const osThreadAttr_t APP_Info_Submit_attributes = {
   .name = "APP_Info_Submit",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityLow1,
+  .priority = (osPriority_t) osPriorityLow5,
 };
 /* Definitions for Device_Run */
 osThreadId_t Device_RunHandle;
