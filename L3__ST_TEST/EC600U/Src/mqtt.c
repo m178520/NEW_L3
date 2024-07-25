@@ -66,13 +66,13 @@ void APP_Info_Submit()
 	char *trans_Msg=NULL;
 	char q[1300] = {0};
 	/*修改上报信息值*/
-	/*进入临界区*/
-	taskENTER_CRITICAL();
+//	/*进入临界区*/
+//	taskENTER_CRITICAL();
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lon,NULL),"property","lon");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lat,NULL),"property","lat");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.CourseAngle,NULL),"property","yaw");
-	/*退出临界区*/
-	taskEXIT_CRITICAL();
+//	/*退出临界区*/
+//	taskEXIT_CRITICAL();
 	
 	trans_Msg = ObjectToString(EC600U_MQTT_SEND_STATUS);
 	
@@ -108,7 +108,7 @@ void USART_MQTT_data(cJSON * object)
 		Type = cJSON_GetObjectItemCaseSensitive(Msg,"type");
 		if(cJSON_IsNumber(Type)&&(Type->valueint != NULL ))
 		{
-			printf("%x",Type->valueint);
+//			printf("%x",Type->valueint);
 			switch(Type->valueint)
 			{
 				case Delete_dev://删除设备

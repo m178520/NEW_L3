@@ -63,8 +63,9 @@ void sbus_parse(uint8_t* bytes,uint8_t len)
 		}
 		else if(SBUS_CH.CH7 == 1801) //可以上电
 		{
+			if(control_powerFlag == 0) power_count = 0;
 			control_powerFlag = 1;
-			power_count = 0;
+			
 		}
 		
 	}

@@ -78,6 +78,7 @@ void HTTP_goToCharge_Request(void);
   \"size\": 0,\
   \"startIndex\": 0,\
   \"tarIndex\": 0,\
+	\"taskId\": 0,\
   \"zoneId\": 0\
 }\
 "

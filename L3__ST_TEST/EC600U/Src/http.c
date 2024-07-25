@@ -128,6 +128,7 @@ void HTTP_updateRoute_Request(void)
 		HTTP_post(UPDATEROUTE_URL,trans_Msg,Header);
 		cJSON_free(trans_Msg);
 	}
+	printf("航线获取\r\n");
 }
 
 /*获取充电桩消息发送*/
@@ -423,6 +424,7 @@ void USART_HTTP_updateRoute_data(cJSON * object)
 //					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
 //					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
 				waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
+				HTTP_updateRoute_Request_flag = 0;
 			}
 	}
 	else  printf("请求失败\r\n");

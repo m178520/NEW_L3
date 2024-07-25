@@ -6,7 +6,9 @@
 #include "uart_data.h"
 #include "motor.h"
 
+char   HTTP_updateRoute_Request_flag = 0;       //用于将分段航线请求标志
 static char Vehicle_To_Distance_Angle_flag = 0; //用于将起点与终点线在每次只计算一次
+
 char wait_run_point[WAIT_RUN_POINT_NUM][2][20];
 
 waypoints_run_status_t waypoints_run_status = {0};
@@ -327,15 +329,16 @@ NAV_output_t NAV_Control()
 	else
 	{
 		/*每次从服务器哪里获取10个数据点 每次车辆到达本次航线取点数的第7位时去获取剩余的点*/
-		if(waypoints_run_status.processed_allnum % 10 == 7) 
+		if(waypoints_run_status.processed_allnum % 10 == 7 && HTTP_updateRoute_Request_flag == 0) 
 		{
+			HTTP_updateRoute_Request_flag++;
 			BIT = BIT_5;
 			osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);//交给HTTP进行分段航线请求
 		}
 	}
 
 	
-	printf("方向量：%f,方向：%d\r\n",Angle,tracking_control.direct);
+//	printf("方向量：%f,方向：%d\r\n",Angle,tracking_control.direct);
 	return NAV_output;
 }
 

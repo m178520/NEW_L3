@@ -73,6 +73,8 @@ typedef struct
 }pointToline_distance_t;
 #endif
 
+extern char   HTTP_updateRoute_Request_flag;
+
 extern waypoints_run_status_t waypoints_run_status;
 
 void waypoints_Parse(char *string,char * str);

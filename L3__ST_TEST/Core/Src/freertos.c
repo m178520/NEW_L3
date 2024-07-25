@@ -87,49 +87,49 @@ osThreadId_t Power_CheckHandle;
 const osThreadAttr_t Power_Check_attributes = {
   .name = "Power_Check",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityLow6,
 };
 /* Definitions for GPS_REC */
 osThreadId_t GPS_RECHandle;
 const osThreadAttr_t GPS_REC_attributes = {
   .name = "GPS_REC",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for SBUS_Parse */
 osThreadId_t SBUS_ParseHandle;
 const osThreadAttr_t SBUS_Parse_attributes = {
   .name = "SBUS_Parse",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow2,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for EC600U_REC */
 osThreadId_t EC600U_RECHandle;
 const osThreadAttr_t EC600U_REC_attributes = {
   .name = "EC600U_REC",
-  .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityBelowNormal,
+  .stack_size = 600 * 4,
+  .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for HTTP_REQUEST */
 osThreadId_t HTTP_REQUESTHandle;
 const osThreadAttr_t HTTP_REQUEST_attributes = {
   .name = "HTTP_REQUEST",
   .stack_size = 400 * 4,
-  .priority = (osPriority_t) osPriorityBelowNormal7,
+  .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for APP_Info_Submit */
 osThreadId_t APP_Info_SubmitHandle;
 const osThreadAttr_t APP_Info_Submit_attributes = {
   .name = "APP_Info_Submit",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityLow5,
+  .priority = (osPriority_t) osPriorityLow7,
 };
 /* Definitions for Device_Run */
 osThreadId_t Device_RunHandle;
 const osThreadAttr_t Device_Run_attributes = {
   .name = "Device_Run",
   .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityLow1,
+  .priority = (osPriority_t) osPriorityBelowNormal1,
 };
 /* Definitions for Device_unusual */
 osThreadId_t Device_unusualHandle;
@@ -143,14 +143,14 @@ osThreadId_t EC600U_SENDHandle;
 const osThreadAttr_t EC600U_SEND_attributes = {
   .name = "EC600U_SEND",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityLow4,
 };
 /* Definitions for VCU_send */
 osThreadId_t VCU_sendHandle;
 const osThreadAttr_t VCU_send_attributes = {
   .name = "VCU_send",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityLow7,
 };
 /* Definitions for uart5_recv_semp_queue */
 osMessageQueueId_t uart5_recv_semp_queueHandle;
@@ -379,7 +379,7 @@ void Power_Check_task(void *argument)
 			{
 				HAL_GPIO_WritePin(GPIOE,  GPIO_PIN_2, GPIO_PIN_SET);
 				while(HAL_GPIO_ReadPin(GPIOE,  GPIO_PIN_2) != GPIO_PIN_SET);
-					osDelay(5000);
+				osDelay(8000);
 				//开启串口空闲DMA空闲中断
 				HAL_UARTEx_ReceiveToIdle_DMA(&huart4, UART4RxData[UART4_fifo.usRxWrite],UART4_Max_Rxbuf_size);
 				HAL_SPI_Receive_DMA(&hspi1 , SPI1RxData[SPI1_fifo.usRxWrite] ,180 );
@@ -733,11 +733,10 @@ void Device_unusual_task(void *argument)
 					Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
 					/*告诉APP我们状态变化了*/
 					/*进入临界区*/
-					taskENTER_CRITICAL();
-
+//					taskENTER_CRITICAL();
 					Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 					/*退出临界区*/
-					taskEXIT_CRITICAL();
+//					taskEXIT_CRITICAL();
 					
 					/*设置第23位让设备可以启动*/
 					osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);
@@ -756,10 +755,10 @@ void Device_unusual_task(void *argument)
 						
 							/*上传APP状态信息*/
 							/*进入临界区*/
-							taskENTER_CRITICAL();
+//							taskENTER_CRITICAL();
 							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 							/*退出临界区*/
-							taskEXIT_CRITICAL();
+//							taskEXIT_CRITICAL();
 						break;
 						case Job_Pause  : //正在工作状态转化成暂停状态
 							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
@@ -769,10 +768,10 @@ void Device_unusual_task(void *argument)
 							
 							/*上传APP状态信息*/
 							/*进入临界区*/
-							taskENTER_CRITICAL();
+//							taskENTER_CRITICAL();
 							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 							/*退出临界区*/
-							taskEXIT_CRITICAL();
+//							taskEXIT_CRITICAL();
 						break;
 //						case Job_Finish : 
 //							/*设置当前状态*/
@@ -801,10 +800,10 @@ void Device_unusual_task(void *argument)
 						
 							/*上传APP状态信息*/
 							/*进入临界区*/
-							taskENTER_CRITICAL();
+//							taskENTER_CRITICAL();
 							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 							/*退出临界区*/
-							taskEXIT_CRITICAL();
+//							taskEXIT_CRITICAL();
 						break;
 						case Job_Block  :   break; //暂时不写
 						default:            break;
@@ -825,10 +824,10 @@ void Device_unusual_task(void *argument)
 						
 							/*上传APP状态信息*/
 							/*进入临界区*/
-							taskENTER_CRITICAL();
+//							taskENTER_CRITICAL();
 							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 							/*退出临界区*/
-							taskEXIT_CRITICAL();
+//							taskEXIT_CRITICAL();
 						break;
 						case Job_Return :  
 							/*设置当前状态*/
@@ -842,10 +841,10 @@ void Device_unusual_task(void *argument)
 						
 							/*上传APP状态信息*/
 							/*进入临界区*/
-							taskENTER_CRITICAL();
+//							taskENTER_CRITICAL();
 							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 							/*退出临界区*/
-							taskEXIT_CRITICAL();
+//							taskEXIT_CRITICAL();
 						break;
 						case Job_Block  :   break;
 						default:            break;
@@ -864,10 +863,10 @@ void Device_unusual_task(void *argument)
 						
 							/*上传APP状态信息*/
 							/*进入临界区*/
-							taskENTER_CRITICAL();
+//							taskENTER_CRITICAL();
 							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 							/*退出临界区*/
-							taskEXIT_CRITICAL();
+//							taskEXIT_CRITICAL();
 				break;
 				case Job_Block      :        break;  //太复杂，等会再说
 				default:                     break;
@@ -943,7 +942,7 @@ void VCU_send_task(void *argument)
 			{
 				CAN1_fifo.usTxRead = 0;
 			}
-			osDelay(5);
+			osDelay(8);
 		}
 		else
 		{
