@@ -5,6 +5,7 @@
 #include "main.h"
 #include "tim.h"
 #include "gps.h"
+#include "nav.h"
 
 
 MQTT_Task_Msg_t MQT_Base_Msg = {0};
@@ -71,6 +72,7 @@ void APP_Info_Submit()
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lon,NULL),"property","lon");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lat,NULL),"property","lat");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.CourseAngle,NULL),"property","yaw");
+	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",waypoints_run_status.current_toindex,"task","tarIndex");
 //	/*退出临界区*/
 //	taskEXIT_CRITICAL();
 	
@@ -126,6 +128,7 @@ void USART_MQTT_data(cJSON * object)
 					break;
 				case Pause_dev: //暂停任务
 //					cJSON_GetObjectItemCaseSensitive(EC600U_HTTP_jobPause,"progress") ->valueint = progress;
+					printf("手机请求暂停\r\n");
 					BIT = BIT_2;
 					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 					break;
@@ -177,7 +180,7 @@ void USART_MQTT_data(cJSON * object)
 					/*开始打开RTK操作*/
 					Device_Poweron_status = Check_RTK;
 					/*打开RTK*/
-					HAL_SPI_Receive_DMA(&hspi1 , SPI1RxData[SPI1_fifo.usRxWrite] ,180 );
+//					HAL_SPI_Receive_DMA(&hspi1 , SPI1RxData[SPI1_fifo.usRxWrite] ,180 );
 					RTK_L1_open("OPEN","Moving","\"dif_base\"");
 					EC600U_REC_block_time = portMAX_DELAY;
 					GPS_REC_block_time    = 1500;

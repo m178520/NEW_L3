@@ -69,7 +69,7 @@ void HTTP_jobFinish_Request(void);
 void HTTP_updateRoute_Request(void);
 void HTTP_goToCharge_Request(void);
 
-#define HTTP_REQUEST_MSG(URL,DATA,HEADER) "{\"url\":\""URL"\",\"data\":\""DATA"\",\"Header\":"HEADER"}"
+#define HTTP_REQUEST_MSG(URL,DATA,HEADER) "{\"url\":\""URL"\",\"data\":"DATA",\"Header\":"HEADER"}"
 #define HTTP_REQUEST_HEADER_MSG(TYPE,DEVICEID,GROUPID) "{\"Content-Type\":\""TYPE"\",\"deviceId\":\""DEVICEID"\",\"groupId\":\""GROUPID"\"}"
 
 #define UPDATE_ROUTE_PARAM "\

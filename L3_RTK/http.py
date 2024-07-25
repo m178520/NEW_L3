@@ -2,13 +2,18 @@ import request
 import ujson
 
 def http_request(fun,url,data,Header):
+    
     try:
+        if(type(data) == dict):
+            data=ujson.dumps(data)
         if(fun == 'post'):
             response = request.post(url,data = data, headers = Header)
         elif(fun == 'get'):
             response = request.get(url,data = data, headers = Header)
+        response = response.json()
+        print(response)
         from usr.test.usart import stm32_usart
-        stm32_usart.Queue_put("{" + "\"Name\":\"HTTP\",\"url\":\"{}\",\"msg\":{}".format(url,response.json()) + "}")
+        stm32_usart.Queue_put("{" + "\"Name\":\"HTTP\",\"url\":\"{}\",\"msg\":{}".format(url,response) + "}")
     except Exception as e:
         print("HTTP获取失败\r\n")
         stm32_usart.Queue_put("{" + "\"Name\":\"HTTP\",\"url\":\"{}\",\"msg\": \"fail\"".format(url) + "}")

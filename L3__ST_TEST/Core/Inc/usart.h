@@ -39,7 +39,7 @@ extern UART_HandleTypeDef huart5;
 /* USER CODE BEGIN Private defines */
 #define UART4_Max_Rxnum_size 15
 #define UART4_Max_Txnum_size 15
-#define UART4_Max_Rxbuf_size 700
+#define UART4_Max_Rxbuf_size 1000
 #define UART4_Max_Txbuf_size 1500
 
 extern uint8_t UART4RxData[UART4_Max_Rxnum_size][UART4_Max_Rxbuf_size];

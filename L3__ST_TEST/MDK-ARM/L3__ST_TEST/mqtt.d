@@ -62,3 +62,6 @@ l3__st_test\mqtt.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 l3__st_test\mqtt.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 l3__st_test\mqtt.o: ../Core/Inc/tim.h
 l3__st_test\mqtt.o: ../EC600U/Inc/gps.h
+l3__st_test\mqtt.o: ../NAV/Inc/nav.h
+l3__st_test\mqtt.o: ../Arithmetic/WGS84transform/WGS84ToAngle.h
+l3__st_test\mqtt.o: ../GeographicLib-C-2.1/geodesic.h

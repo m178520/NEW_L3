@@ -3,7 +3,7 @@
 <title>Static Call Graph - [L3__ST_TEST\L3__ST_TEST.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image L3__ST_TEST\L3__ST_TEST.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Jul 25 10:32:16 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Jul 25 17:36:34 2024
 <BR><P>
 <H3>Maximum Stack Usage =       2088 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1082,7 +1082,7 @@ Global Symbols
 
 <P><STRONG><a name="[2a7]"></a>__decompress1</STRONG> (Thumb, 86 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
-<P><STRONG><a name="[e7]"></a>APP_Info_Submit</STRONG> (Thumb, 170 bytes, Stack size 1320 bytes, mqtt.o(i.APP_Info_Submit))
+<P><STRONG><a name="[e7]"></a>APP_Info_Submit</STRONG> (Thumb, 188 bytes, Stack size 1320 bytes, mqtt.o(i.APP_Info_Submit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 1736<LI>Call Chain = APP_Info_Submit &rArr; ObjectToString &rArr; cJSON_Print &rArr; print &rArr; print_value &rArr; print_number &rArr; sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EC600U_send_msg
@@ -1196,7 +1196,7 @@ Global Symbols
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Device_Run_task
 </UL>
 
-<P><STRONG><a name="[ac]"></a>EC600U_REC_task</STRONG> (Thumb, 232 bytes, Stack size 16 bytes, freertos.o(i.EC600U_REC_task))
+<P><STRONG><a name="[ac]"></a>EC600U_REC_task</STRONG> (Thumb, 240 bytes, Stack size 16 bytes, freertos.o(i.EC600U_REC_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 840<LI>Call Chain = EC600U_REC_task &rArr; uart4_rec_data_apply &rArr; USART_HTTP_data &rArr; USART_HTTP_Authen_data &rArr; MQTT_open &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
@@ -1797,8 +1797,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Start_IT
 </UL>
-<BR>[Called By]<UL><LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_MQTT_data
-<LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_RxCpltCallback
+<BR>[Called By]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_RxCpltCallback
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Power_Check_task
 </UL>
 
@@ -2056,8 +2055,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMATxHalfCplt
 </UL>
 
-<P><STRONG><a name="[199]"></a>HTTP_Authen_Request</STRONG> (Thumb, 30 bytes, Stack size 56 bytes, http.o(i.HTTP_Authen_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 776<LI>Call Chain = HTTP_Authen_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[199]"></a>HTTP_Authen_Request</STRONG> (Thumb, 38 bytes, Stack size 64 bytes, http.o(i.HTTP_Authen_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 784<LI>Call Chain = HTTP_Authen_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
 <LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
@@ -2066,7 +2065,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ad]"></a>HTTP_REQUEST_task</STRONG> (Thumb, 144 bytes, Stack size 8 bytes, freertos.o(i.HTTP_REQUEST_task))
-<BR><BR>[Stack]<UL><LI>Max Depth = 952<LI>Call Chain = HTTP_REQUEST_task &rArr; HTTP_jobFinish_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 960<LI>Call Chain = HTTP_REQUEST_task &rArr; HTTP_jobFinish_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StringToObject
 <LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
@@ -2082,7 +2081,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[1a1]"></a>HTTP_goToCharge_Request</STRONG> (Thumb, 52 bytes, Stack size 216 bytes, http.o(i.HTTP_goToCharge_Request))
+<P><STRONG><a name="[1a1]"></a>HTTP_goToCharge_Request</STRONG> (Thumb, 60 bytes, Stack size 216 bytes, http.o(i.HTTP_goToCharge_Request))
 <BR><BR>[Stack]<UL><LI>Max Depth = 936<LI>Call Chain = HTTP_goToCharge_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
@@ -2092,7 +2091,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19e]"></a>HTTP_jobContinue_Request</STRONG> (Thumb, 52 bytes, Stack size 216 bytes, http.o(i.HTTP_jobContinue_Request))
+<P><STRONG><a name="[19e]"></a>HTTP_jobContinue_Request</STRONG> (Thumb, 60 bytes, Stack size 216 bytes, http.o(i.HTTP_jobContinue_Request))
 <BR><BR>[Stack]<UL><LI>Max Depth = 936<LI>Call Chain = HTTP_jobContinue_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
@@ -2102,8 +2101,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19f]"></a>HTTP_jobFinish_Request</STRONG> (Thumb, 68 bytes, Stack size 224 bytes, http.o(i.HTTP_jobFinish_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 944<LI>Call Chain = HTTP_jobFinish_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[19f]"></a>HTTP_jobFinish_Request</STRONG> (Thumb, 76 bytes, Stack size 232 bytes, http.o(i.HTTP_jobFinish_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 952<LI>Call Chain = HTTP_jobFinish_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
@@ -2112,7 +2111,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19d]"></a>HTTP_jobPause_Request</STRONG> (Thumb, 148 bytes, Stack size 176 bytes, http.o(i.HTTP_jobPause_Request))
+<P><STRONG><a name="[19d]"></a>HTTP_jobPause_Request</STRONG> (Thumb, 154 bytes, Stack size 176 bytes, http.o(i.HTTP_jobPause_Request))
 <BR><BR>[Stack]<UL><LI>Max Depth = 896<LI>Call Chain = HTTP_jobPause_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
@@ -2120,12 +2119,13 @@ Global Symbols
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Json_data_Change
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
 <LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_free
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_strtod
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19c]"></a>HTTP_jobStart_Request</STRONG> (Thumb, 58 bytes, Stack size 216 bytes, http.o(i.HTTP_jobStart_Request))
+<P><STRONG><a name="[19c]"></a>HTTP_jobStart_Request</STRONG> (Thumb, 66 bytes, Stack size 216 bytes, http.o(i.HTTP_jobStart_Request))
 <BR><BR>[Stack]<UL><LI>Max Depth = 936<LI>Call Chain = HTTP_jobStart_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
@@ -2152,8 +2152,8 @@ Global Symbols
 <LI><a href="#[199]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_Authen_Request
 </UL>
 
-<P><STRONG><a name="[1a0]"></a>HTTP_updateRoute_Request</STRONG> (Thumb, 140 bytes, Stack size 176 bytes, http.o(i.HTTP_updateRoute_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 896<LI>Call Chain = HTTP_updateRoute_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[1a0]"></a>HTTP_updateRoute_Request</STRONG> (Thumb, 138 bytes, Stack size 168 bytes, http.o(i.HTTP_updateRoute_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 888<LI>Call Chain = HTTP_updateRoute_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ObjectToString
@@ -2187,6 +2187,7 @@ Global Symbols
 <LI><a href="#[19d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_jobPause_Request
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Device_unusual_task
+<LI><a href="#[1e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_HTTP_jobStart_data
 <LI><a href="#[1e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_HTTP_Authen_data
 </UL>
 
@@ -2340,7 +2341,7 @@ Global Symbols
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
 </UL>
 
-<P><STRONG><a name="[a9]"></a>Power_Check_task</STRONG> (Thumb, 210 bytes, Stack size 0 bytes, freertos.o(i.Power_Check_task))
+<P><STRONG><a name="[a9]"></a>Power_Check_task</STRONG> (Thumb, 214 bytes, Stack size 0 bytes, freertos.o(i.Power_Check_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 100<LI>Call Chain = Power_Check_task &rArr; HAL_UARTEx_ReceiveToIdle_DMA &rArr; UART_Start_Receive_DMA &rArr; HAL_DMA_Start_IT &rArr; DMA_SetConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
@@ -2400,11 +2401,10 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h743xx.o(RESET)
 </UL>
-<P><STRONG><a name="[a8]"></a>StartDefaultTask</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, freertos.o(i.StartDefaultTask))
+<P><STRONG><a name="[a8]"></a>StartDefaultTask</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, freertos.o(i.StartDefaultTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = StartDefaultTask &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
@@ -2470,7 +2470,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NAV_Control
 </UL>
 
-<P><STRONG><a name="[185]"></a>UART4_IDLE_Callback</STRONG> (Thumb, 170 bytes, Stack size 24 bytes, usart.o(i.UART4_IDLE_Callback))
+<P><STRONG><a name="[185]"></a>UART4_IDLE_Callback</STRONG> (Thumb, 190 bytes, Stack size 24 bytes, usart.o(i.UART4_IDLE_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = UART4_IDLE_Callback &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
@@ -2481,7 +2481,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
 </UL>
 
-<P><STRONG><a name="[187]"></a>UART4_IDLE_DMA_RXCplt_Err_Callback</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, usart.o(i.UART4_IDLE_DMA_RXCplt_Err_Callback))
+<P><STRONG><a name="[187]"></a>UART4_IDLE_DMA_RXCplt_Err_Callback</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, usart.o(i.UART4_IDLE_DMA_RXCplt_Err_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = UART4_IDLE_DMA_RXCplt_Err_Callback &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
@@ -2586,7 +2586,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_HTTP_data
 </UL>
 
-<P><STRONG><a name="[1e4]"></a>USART_HTTP_data</STRONG> (Thumb, 614 bytes, Stack size 24 bytes, http.o(i.USART_HTTP_data))
+<P><STRONG><a name="[1e4]"></a>USART_HTTP_data</STRONG> (Thumb, 618 bytes, Stack size 24 bytes, http.o(i.USART_HTTP_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 800<LI>Call Chain = USART_HTTP_data &rArr; USART_HTTP_Authen_data &rArr; MQTT_open &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
@@ -2654,12 +2654,13 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_HTTP_data
 </UL>
 
-<P><STRONG><a name="[1e6]"></a>USART_HTTP_jobStart_data</STRONG> (Thumb, 176 bytes, Stack size 16 bytes, http.o(i.USART_HTTP_jobStart_data))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = USART_HTTP_jobStart_data &rArr; osEventFlagsSet &rArr; xEventGroupSetBitsFromISR &rArr; xTimerPendFunctionCallFromISR &rArr; xQueueGenericSendFromISR &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
+<P><STRONG><a name="[1e6]"></a>USART_HTTP_jobStart_data</STRONG> (Thumb, 210 bytes, Stack size 16 bytes, http.o(i.USART_HTTP_jobStart_data))
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = USART_HTTP_jobStart_data &rArr; Json_data_Change &rArr; cJSON_GetObjectItemCaseSensitive &rArr; get_object_item &rArr; case_insensitive_strcmp
 </UL>
 <BR>[Calls]<UL><LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsSet
 <LI><a href="#[1ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_IsObject
 <LI><a href="#[1ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_GetObjectItemCaseSensitive
+<LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Json_data_Change
 <LI><a href="#[1e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_IsNumber
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[1ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcpy
@@ -2691,7 +2692,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart4_rec_data_apply
 </UL>
 
-<P><STRONG><a name="[1ed]"></a>USART_MQTT_data</STRONG> (Thumb, 660 bytes, Stack size 32 bytes, mqtt.o(i.USART_MQTT_data))
+<P><STRONG><a name="[1ed]"></a>USART_MQTT_data</STRONG> (Thumb, 640 bytes, Stack size 32 bytes, mqtt.o(i.USART_MQTT_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = USART_MQTT_data &rArr; RTK_L1_open &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
@@ -2701,7 +2702,6 @@ Global Symbols
 <LI><a href="#[1ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_GetObjectItemCaseSensitive
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsClear
 <LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop_IT
-<LI><a href="#[173]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_Receive_DMA
 <LI><a href="#[1cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTK_L1_open
 <LI><a href="#[1e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_IsNumber
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
@@ -2749,8 +2749,8 @@ Global Symbols
 <LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_GPS_data
 <LI><a href="#[1a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_updateRoute_Request
 <LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_jobStart_Request
+<LI><a href="#[19d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_jobPause_Request
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartDefaultTask
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPS_REC_task
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EC600U_REC_task
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Device_Run_task

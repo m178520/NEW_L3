@@ -174,7 +174,7 @@ def stm32_usart_rec_task():
                             mqtt.MQTT_APP_queue.put(usart_data['Source']['msg'])
                 #操作http
                 elif(usart_data['Name'] == "HTTP"):
-                    print("HTTP")
+                    print(usart_data)
                     http.http_request(usart_data['fun'],usart_data['Source']['url'],usart_data['Source']['data'],usart_data['Source']['Header'])
                 
                 elif(usart_data['Name'] == "GPS"):

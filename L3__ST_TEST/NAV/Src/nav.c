@@ -217,7 +217,7 @@ NAV_output_t NAV_Control()
 	uint32_t BIT=0;
 	NAV_output_t NAV_output;
 	double Lenght,process = 0;
-	double Angle,Speed = 60;
+	double Angle,Speed = 90;
 	pointToline_distance_t pointToline_info = {0};
 	tracking_control_t     tracking_control = {0};
 	if(waypoints_run_status.current_toindex != 0) //不是前往初始点

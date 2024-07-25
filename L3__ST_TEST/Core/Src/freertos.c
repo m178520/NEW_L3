@@ -351,11 +351,15 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+//	uint32_t uxBits;
   /* Infinite loop */
   for(;;)
   {
-		printf("run\r\n");
-    osDelay(1000);
+//		uxBits = osEventFlagsWait(Device_Run_status_eventHandle,  BIT_1, osFlagsNoClear, portMAX_DELAY);
+		
+//		printf("run\r\n");
+    osDelay(8000);
+//		HTTP_updateRoute_Request();
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -734,6 +738,7 @@ void Device_unusual_task(void *argument)
 					/*告诉APP我们状态变化了*/
 					/*进入临界区*/
 //					taskENTER_CRITICAL();
+					
 					Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
 					/*退出临界区*/
 //					taskEXIT_CRITICAL();
