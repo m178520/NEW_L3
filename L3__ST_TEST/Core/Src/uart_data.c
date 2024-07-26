@@ -40,8 +40,8 @@ void uart4_rec_data_apply(uint8_t *data,uint16_t len)
 {
 	uint8_t null_len = 0;
 	uint32_t BIT = 0;
-	cJSON * EC600U_MQTT_RECV_STATUS = {0};
-	cJSON * Name ={0};
+	cJSON * EC600U_MQTT_RECV_STATUS = NULL;
+	cJSON * Name = NULL;
 	
 	for(int i = 0; i<=len ; i++)
 	{
@@ -104,7 +104,7 @@ void uart4_rec_data_apply(uint8_t *data,uint16_t len)
 	}
 	
 	//使用完成后一定要释放object对象
-	cJSON_Delete(EC600U_MQTT_RECV_STATUS);
+	if(EC600U_MQTT_RECV_STATUS != NULL) cJSON_Delete(EC600U_MQTT_RECV_STATUS);
 	//使用完一定要清除数组内内容
 }
 

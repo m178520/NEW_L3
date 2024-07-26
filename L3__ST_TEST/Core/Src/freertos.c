@@ -730,7 +730,9 @@ void Device_unusual_task(void *argument)
 			switch(Device_Run_Status.Curstatus)
 			{
 				case Job_Wait:  //当前状态为空闲，只会进入到作业中 只会从http中获取航线并解析
-					/*先将从http拿到的航点进行分割*/
+				/*无论是第一次运行还是在运行过程中重新运行,只要是开始任务，就需要重置标志位*/
+					NAV_Control_Param_clear();
+				/*先将从http拿到的航点进行分割*/
 					waypoints_Parse(HTTP_Task_Msg.waypoints,",");
 					/*设置当前状态*/
 					Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
@@ -750,7 +752,7 @@ void Device_unusual_task(void *argument)
 				case Job_Working: //正在工作状态可以转化成为停止（空闲），作业暂停，作业完成，召回,遇到障碍物等
 					switch(Device_Run_Status.Alterstatus)
 					{
-						case Job_Wait   :
+						case Job_Wait   : //从工作状态进入至空闲，只能是停止按钮
 							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
 							/*设置当前状态*/
 							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
@@ -765,7 +767,7 @@ void Device_unusual_task(void *argument)
 							/*退出临界区*/
 //							taskEXIT_CRITICAL();
 						break;
-						case Job_Pause  : //正在工作状态转化成暂停状态
+						case Job_Pause  : //正在工作状态转化成暂停状态 暂停按钮
 							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
 							/*设置当前状态*/
 							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
@@ -819,13 +821,15 @@ void Device_unusual_task(void *argument)
 					{
 						case Job_Wait   :   break;
 						case Job_Working: //正在暂停状态变换为作业状态
+							if((osEventFlagsGet(Device_Run_status_eventHandle) & BIT_23) == 0) osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);  //转变为启动
+							
 							/*设置当前状态*/
 							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
 							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
 							
-							NAV_Control_Param_clear(); 
-						
-							waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
+//							NAV_Control_Param_clear(); 
+//						
+//							waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
 						
 							/*上传APP状态信息*/
 							/*进入临界区*/

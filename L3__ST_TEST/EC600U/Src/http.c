@@ -64,7 +64,6 @@ void HTTP_jobStart_Request(void)
 	sprintf(data,"%c%s%d%c",'"',"zoneId=",MQTT_Task_Msg.zoneId,'"');
 	insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d", "application/x-www-form-urlencoded;charset=UTF-8" ,Authen_info.deviceId,Authen_info.groupId);
 	HTTP_post(JOBSTART_URL,data,Header);
-	printf("发送开始请求");
 }
 
 /*暂停工作消息发送*/
@@ -73,18 +72,18 @@ void HTTP_jobPause_Request(void)
 	char Header[150];
 	char *trans_Msg;
 	
-	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",strtod(gnss.Lat,NULL),"pauseLat"); 
-	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",strtod(gnss.Lon,NULL),"pauseLon");
+	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lat,NULL),"pauseLat"); 
+	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lon,NULL),"pauseLon");
 	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"progress");
 	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.current_toindex,"targetIndex");
 	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
+	
 	
 	trans_Msg = ObjectToString(EC600U_HTTP_jobPause);
 	if(trans_Msg != NULL)
 	{
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
 		HTTP_post(JOBPAUSE_URL,trans_Msg,Header);
-		printf("HTTP请求");
 		cJSON_free(trans_Msg);
 	}
 }
@@ -117,14 +116,10 @@ void HTTP_updateRoute_Request(void)
 	
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"progress");  /* 暂时未想好怎么写 */
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"size");
-//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
-//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.current_toindex,"tarIndex");
-//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
-//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"startIndex");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",2,"tarIndex");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",1989,"taskId");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",171,"zoneId");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.current_toindex,"tarIndex");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
 	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
 	if(trans_Msg != NULL)
@@ -142,9 +137,9 @@ void HTTP_goToCharge_Request(void)
 {
 	char data[50];
 	char Header[150];
-	sprintf(data,"%c%s%d%c",'"',"zoneId=",MQTT_Task_Msg.zoneId,'"');
+	sprintf(data,"%c%s%d%c%s%d%c",'"',"zoneId=",MQTT_Task_Msg.zoneId,'&',"tarIndex=",waypoints_run_status.current_toindex,'"');
 	insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d", "application/x-www-form-urlencoded;charset=UTF-8" ,Authen_info.deviceId,Authen_info.groupId);
-	HTTP_post(JOBCONTINUE_URL,data,Header);
+	HTTP_get(JOBCONTINUE_URL,data,Header);
 }
 
 
@@ -390,7 +385,7 @@ void USART_HTTP_jobPause_data(cJSON * object)
 	if(cJSON_IsNumber(Status)&&Status->valueint == 100)
 	{
 		request_num = 0;
-
+		
 		/*进行状态变换*/
 		Device_Run_Status.Alterstatus = Job_Pause;
 		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换

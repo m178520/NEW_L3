@@ -12,7 +12,7 @@ MQTT_Task_Msg_t MQT_Base_Msg = {0};
 MQTT_Task_Msg_t MQTT_self_Base_Msg = {0};
 
 int Knife_Height = 0;
-int MQTT_Return_Task_ZoneId = 0;
+int MQTT_Return_Task_typeId = 0;
 int Safe_Zone_Detect = 0;
 MQTT_Task_Msg_t MQTT_Task_Msg = {0};
 char Change_Safe_Zone[100] = {0};
@@ -128,34 +128,56 @@ void USART_MQTT_data(cJSON * object)
 					break;
 				case Pause_dev: //暂停任务
 //					cJSON_GetObjectItemCaseSensitive(EC600U_HTTP_jobPause,"progress") ->valueint = progress;
-					printf("手机请求暂停\r\n");
+//					printf("手机请求暂停\r\n");
 					BIT = BIT_2;
 					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 					break;
 				case Continue_dev: //继续任务
-					
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+					if(cJSON_IsObject(Data)&&(Data != NULL ))
+					{
 						MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
 						MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
 						BIT = BIT_3;		
 						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
-					
+					}
 					break;
 				case Return_dev: //一键召回
-					MQTT_Return_Task_ZoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-					BIT = BIT_6;	
-					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+					if(cJSON_IsObject(Data)&&(Data != NULL ))
+					{
+						MQTT_Return_Task_typeId = cJSON_GetObjectItemCaseSensitive(Data,"typeId")->valueint;
+						BIT = BIT_6;	
+						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+					}
 					break;
 				case 2005: //割刀高度
-					Knife_Height = cJSON_GetObjectItemCaseSensitive(Data,"height")->valueint;
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+					if(cJSON_IsObject(Data)&&(Data != NULL ))
+					{
+						Knife_Height = cJSON_GetObjectItemCaseSensitive(Data,"height")->valueint;
+					}
 					break;
 				case 2006: //安全区域检测
-					Safe_Zone_Detect = cJSON_GetObjectItemCaseSensitive(Data,"enable")->valueint;
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+					if(cJSON_IsObject(Data)&&(Data != NULL ))
+					{
+						Safe_Zone_Detect = cJSON_GetObjectItemCaseSensitive(Data,"enable")->valueint;
+					}
 					break;
 				case 2007: //修改安全区域检测
-					strcpy(Change_Safe_Zone, cJSON_GetObjectItemCaseSensitive(Data,"safeZone")->valuestring);
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+					if(cJSON_IsObject(Data)&&(Data != NULL ))
+					{
+						strcpy(Change_Safe_Zone, cJSON_GetObjectItemCaseSensitive(Data,"safeZone")->valuestring);
+					}
 					break;
 				case 2008: //车灯控制
-					Light_Status = cJSON_GetObjectItemCaseSensitive(Data,"status")->valueint;
+					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+					if(cJSON_IsObject(Data)&&(Data != NULL ))
+					{
+						Light_Status = cJSON_GetObjectItemCaseSensitive(Data,"status")->valueint;
+					}
 					break;
 				case 2009: //割刀控制
 					
