@@ -129,17 +129,19 @@ void HTTP_updateRoute_Request(void)
 		printf("航线获取\r\n");
 		cJSON_free(trans_Msg);
 	}
-	
 }
 
 /*获取充电桩消息发送*/
 void HTTP_goToCharge_Request(void)
 {
 	char data[50];
+	char url[150];
 	char Header[150];
-	sprintf(data,"%c%s%d%c%s%d%c",'"',"zoneId=",MQTT_Task_Msg.zoneId,'&',"tarIndex=",waypoints_run_status.current_toindex,'"');
+//	sprintf(data,"%c%s%d%c%s%d%c",'{',"\"zoneId\":",MQTT_Task_Msg.zoneId,',',"\"tarIndex\":",waypoints_run_status.current_toindex,'}');
+	sprintf(data,"%c%s%d%c%s%d",'?',"zoneId=",MQTT_Task_Msg.zoneId,'&',"tarIndex=",waypoints_run_status.current_toindex);
+	sprintf(url,"%s%s",CHARGE_URL,data);
 	insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d", "application/x-www-form-urlencoded;charset=UTF-8" ,Authen_info.deviceId,Authen_info.groupId);
-	HTTP_get(JOBCONTINUE_URL,data,Header);
+	HTTP_get(url,"\"\"",Header);
 }
 
 
