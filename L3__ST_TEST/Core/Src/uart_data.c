@@ -1,6 +1,6 @@
 #include "uart_data.h"
 #include "usart.h"
-#include "main.h"
+#include "change_status.h"
 
 extern uint32_t EC600U_REC_block_time;
 

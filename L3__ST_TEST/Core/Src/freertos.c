@@ -34,7 +34,7 @@
 #include "nav.h"
 #include "motor.h"
 #include "uart_data.h"
-
+#include "change_status.h"
 
 extern uint8_t power_count; //用于EC600U上电记次数使用
 /* USER CODE END Includes */
@@ -51,14 +51,7 @@ uint32_t EC600U_REC_block_time = portMAX_DELAY;
 uint32_t APP_Info_Submit_time  = portMAX_DELAY;
 uint32_t Device_unusual_time   = portMAX_DELAY;
 
-Device_Poweron_status_t Device_Poweron_status = Check_poweron;
 
-Change_Status_t Device_Run_Status =
-{
-	Poweron,
-	Poweron,
-	Job_Wait
-};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -727,160 +720,7 @@ void Device_unusual_task(void *argument)
 		}
 		else if( (uxBits & BIT_1)  != 0 )          //状态变化
 		{
-			switch(Device_Run_Status.Curstatus)
-			{
-				case Job_Wait:  //当前状态为空闲，只会进入到作业中 只会从http中获取航线并解析
-				/*无论是第一次运行还是在运行过程中重新运行,只要是开始任务，就需要重置标志位*/
-					NAV_Control_Param_clear();
-				/*先将从http拿到的航点进行分割*/
-					waypoints_Parse(HTTP_Task_Msg.waypoints,",");
-					/*设置当前状态*/
-					Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-					Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-					/*告诉APP我们状态变化了*/
-					/*进入临界区*/
-//					taskENTER_CRITICAL();
-					
-					Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-					/*退出临界区*/
-//					taskEXIT_CRITICAL();
-					
-					/*设置第23位让设备可以启动*/
-					osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);
-				break;
-				
-				case Job_Working: //正在工作状态可以转化成为停止（空闲），作业暂停，作业完成，召回,遇到障碍物等
-					switch(Device_Run_Status.Alterstatus)
-					{
-						case Job_Wait   : //从工作状态进入至空闲，只能是停止按钮
-							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
-							/*设置当前状态*/
-							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-							
-							NAV_Control_Param_clear(); 
-						
-							/*上传APP状态信息*/
-							/*进入临界区*/
-//							taskENTER_CRITICAL();
-							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-						break;
-						case Job_Pause  : //正在工作状态转化成暂停状态 暂停按钮
-							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
-							/*设置当前状态*/
-							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-							
-							/*上传APP状态信息*/
-							/*进入临界区*/
-//							taskENTER_CRITICAL();
-							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-						break;
-//						case Job_Finish : 
-//							/*设置当前状态*/
-//							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-//							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-//							
-//							/*上传APP状态信息*/
-//							/*进入临界区*/
-//							taskENTER_CRITICAL();
-//							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-//							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-//						
-//							Device_Run_Status.Curstatus = Job_Wait;
-//						break;
-						case Job_Return :  //正在工作状态转变为召回状态
-							osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
-							/*设置当前状态*/
-							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-							
-							NAV_Control_Param_clear(); 
-						
-							/*将从http拿到的航点进行分割*/
-							waypoints_Parse(HTTP_Task_Msg.waypoints,",");
-						
-							/*上传APP状态信息*/
-							/*进入临界区*/
-//							taskENTER_CRITICAL();
-							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-						break;
-						case Job_Block  :   break; //暂时不写
-						default:            break;
-					}
-				  break;
-				case Job_Pause:  //正在暂停状态可以更换为作业中，召回两个状态   
-					switch(Device_Run_Status.Alterstatus)
-					{
-						case Job_Wait   :   break;
-						case Job_Working: //正在暂停状态变换为作业状态
-							if((osEventFlagsGet(Device_Run_status_eventHandle) & BIT_23) == 0) osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);  //转变为启动
-							
-							/*设置当前状态*/
-							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-							
-//							NAV_Control_Param_clear(); 
-//						
-//							waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
-						
-							/*上传APP状态信息*/
-							/*进入临界区*/
-//							taskENTER_CRITICAL();
-							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-						break;
-						case Job_Return :  
-							/*设置当前状态*/
-							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-							
-							NAV_Control_Param_clear(); 
-						
-							/*将从http拿到的航点进行分割*/
-							waypoints_Parse(HTTP_Task_Msg.waypoints,",");
-						
-							/*上传APP状态信息*/
-							/*进入临界区*/
-//							taskENTER_CRITICAL();
-							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-						break;
-						case Job_Block  :   break;
-						default:            break;
-					}
-					break;
-//				case Job_Finish     ://只能转换到空闲状态        
-//					
-//				break;
-				case Job_Return     ://只能转换到空闲        
-					osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
-							/*设置当前状态*/
-							Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
-							Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
-							
-							NAV_Control_Param_clear(); 
-						
-							/*上传APP状态信息*/
-							/*进入临界区*/
-//							taskENTER_CRITICAL();
-							Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");
-							/*退出临界区*/
-//							taskEXIT_CRITICAL();
-				break;
-				case Job_Block      :        break;  //太复杂，等会再说
-				default:                     break;
-			}
-			
+			change_status_fun();
 		}
 		
 		else if( (uxBits & BIT_2)  != 0 )          //RTK失去信号

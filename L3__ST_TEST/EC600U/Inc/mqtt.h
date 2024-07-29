@@ -40,6 +40,12 @@ typedef struct{
 	int taskId;
 }MQTT_Task_Msg_t;
 
+/*·ÀÖ¹Îó´¥²Ù×÷*/
+typedef struct{
+	uint16_t Precontact;
+	uint16_t Curcontact;
+}MQTT_miscontact_t;
+
 
 extern int Knife_Height;
 extern int MQTT_Return_Task_ZoneId;

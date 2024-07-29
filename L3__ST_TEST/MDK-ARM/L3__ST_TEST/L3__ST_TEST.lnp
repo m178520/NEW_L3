@@ -1,5 +1,6 @@
 --cpu Cortex-M7.fp.dp
 "l3__st_test\startup_stm32h743xx.o"
+"l3__st_test\change_status.o"
 "l3__st_test\deal_string.o"
 "l3__st_test\uart_data.o"
 "l3__st_test\sbus.o"

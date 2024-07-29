@@ -2,7 +2,7 @@
 #include "usart.h"
 #include "spi.h"
 #include "cmsis_os.h"
-#include "main.h"
+#include "change_status.h"
 #include "tim.h"
 #include "gps.h"
 #include "nav.h"
@@ -23,7 +23,11 @@ char Device_MQTT_Status[] = DEVICE_MQTT_STATUS;
 
 /*开启rtk使用*/
 extern uint32_t GPS_REC_block_time;
+
 extern osMessageQueueId_t SPI1_recv_semp_queueHandle;
+extern osEventFlagsId_t Device_unusual_status_eventHandle;
+
+MQTT_miscontact_t MQTT_miscontact;
 
 MQTT_info_t MQTT_APP_info = {
 	MQTT_APP_IP,
@@ -111,78 +115,92 @@ void USART_MQTT_data(cJSON * object)
 		if(cJSON_IsNumber(Type)&&(Type->valueint != NULL ))
 		{
 //			printf("%x",Type->valueint);
-			switch(Type->valueint)
+			MQTT_miscontact.Curcontact = Type->valueint;
+			if(MQTT_miscontact.Curcontact != MQTT_miscontact.Precontact)//防止多次点击同一按钮
 			{
-				case Delete_dev://删除设备
-					
-					break;
-				case Start_dev: //启动任务
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
-						MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-						BIT = BIT_1;
-						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
-					}
-					break;
-				case Pause_dev: //暂停任务
-//					cJSON_GetObjectItemCaseSensitive(EC600U_HTTP_jobPause,"progress") ->valueint = progress;
-//					printf("手机请求暂停\r\n");
-					BIT = BIT_2;
-					osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
-					break;
-				case Continue_dev: //继续任务
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
-						MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-						BIT = BIT_3;		
-						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
-					}
-					break;
-				case Return_dev: //一键召回
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						MQTT_Return_Task_typeId = cJSON_GetObjectItemCaseSensitive(Data,"typeId")->valueint;
-						BIT = BIT_6;	
-						osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
-					}
-					break;
-				case 2005: //割刀高度
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						Knife_Height = cJSON_GetObjectItemCaseSensitive(Data,"height")->valueint;
-					}
-					break;
-				case 2006: //安全区域检测
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						Safe_Zone_Detect = cJSON_GetObjectItemCaseSensitive(Data,"enable")->valueint;
-					}
-					break;
-				case 2007: //修改安全区域检测
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						strcpy(Change_Safe_Zone, cJSON_GetObjectItemCaseSensitive(Data,"safeZone")->valuestring);
-					}
-					break;
-				case 2008: //车灯控制
-					Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
-					if(cJSON_IsObject(Data)&&(Data != NULL ))
-					{
-						Light_Status = cJSON_GetObjectItemCaseSensitive(Data,"status")->valueint;
-					}
-					break;
-				case 2009: //割刀控制
-					
-					break;
-				default : printf("APP_type有误\r\n"); break;
+				switch(Type->valueint)
+				{
+					case Delete_dev://删除设备
+						
+						break;
+					case Start_dev: //启动任务
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
+							MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
+							BIT = BIT_1;
+							osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+						}
+						break;
+					case Pause_dev: //暂停任务
+	//					cJSON_GetObjectItemCaseSensitive(EC600U_HTTP_jobPause,"progress") ->valueint = progress;
+	//					printf("手机请求暂停\r\n");
+ 						if(Device_Run_Status.Curstatus != Job_Return)
+						{
+							BIT = BIT_2;
+							osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+						}
+						else
+						{
+							/*进行状态变换*/
+							Device_Run_Status.Alterstatus = Job_Pause;
+							osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
+						}
+						break;
+					case Continue_dev: //继续任务
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							MQTT_Task_Msg.taskId = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
+							MQTT_Task_Msg.zoneId = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
+							BIT = BIT_3;		
+							osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+						}
+						break;
+					case Return_dev: //一键召回
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							MQTT_Return_Task_typeId = cJSON_GetObjectItemCaseSensitive(Data,"typeId")->valueint;
+							BIT = BIT_6;	
+							osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
+						}
+						break;
+					case 2005: //割刀高度
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							Knife_Height = cJSON_GetObjectItemCaseSensitive(Data,"height")->valueint;
+						}
+						break;
+					case 2006: //安全区域检测
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							Safe_Zone_Detect = cJSON_GetObjectItemCaseSensitive(Data,"enable")->valueint;
+						}
+						break;
+					case 2007: //修改安全区域检测
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							strcpy(Change_Safe_Zone, cJSON_GetObjectItemCaseSensitive(Data,"safeZone")->valuestring);
+						}
+						break;
+					case 2008: //车灯控制
+						Data = cJSON_GetObjectItemCaseSensitive(Msg,"data");
+						if(cJSON_IsObject(Data)&&(Data != NULL ))
+						{
+							Light_Status = cJSON_GetObjectItemCaseSensitive(Data,"status")->valueint;
+						}
+						break;
+					case 2009: //割刀控制
+						
+						break;
+					default : printf("APP_type有误\r\n"); break;
+				}
+				MQTT_miscontact.Precontact = MQTT_miscontact.Curcontact;
 			}
 		}
 	}

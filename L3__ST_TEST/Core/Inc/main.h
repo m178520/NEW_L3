@@ -81,8 +81,7 @@ typedef struct
 	Device_Run_status_t Alterstatus;
 }Change_Status_t;
 
-extern Device_Poweron_status_t Device_Poweron_status;
-extern Change_Status_t Device_Run_Status;
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

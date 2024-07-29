@@ -76,10 +76,10 @@ Line_inter_point_t Line_inter_point_math(double k1,double b1,double k2,double b2
 
 
 /*调试过程中使用，判断是否与目标值是否误差很小*/
-static int checkEquals(double x, double y, double d) {
-  if (fabs(x - y) <= d)
-    return 0;
-  printf("checkEquals fails: %.7g != %.7g +/- %.7g\n", x, y, d);
-  return 1;
-}
+//static int checkEquals(double x, double y, double d) {
+//  if (fabs(x - y) <= d)
+//    return 0;
+//  printf("checkEquals fails: %.7g != %.7g +/- %.7g\n", x, y, d);
+//  return 1;
+//}
 

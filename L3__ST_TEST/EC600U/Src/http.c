@@ -1,6 +1,6 @@
 #include "http.h"
 #include "cmsis_os.h"
-#include "main.h"
+#include "change_status.h"
 #include "nav.h"
 #include "gps.h"
 
@@ -12,6 +12,7 @@ char Update_Route_param[] = UPDATE_ROUTE_PARAM;
 char Pause_param[] = PAUSE_PARAM;
 
 extern char Imei[30];
+
 extern osEventFlagsId_t Device_Run_status_eventHandle;
 extern osEventFlagsId_t Device_unusual_status_eventHandle;
 extern void EC600U_send_msg(char* Name,char* fun,char *Source,uint16_t len);
@@ -363,12 +364,12 @@ void USART_HTTP_jobContinue_data(cJSON * object)
 				Data = cJSON_GetObjectItemCaseSensitive(object,"data");
 				if(cJSON_IsObject(Data)&&(Data != NULL ))
 				{
-//					HTTP_Task_Msg.zoneId      = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
-//					HTTP_Task_Msg.taskId      = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
+					HTTP_Task_Msg.zoneId      = cJSON_GetObjectItemCaseSensitive(Data,"zoneId")->valueint;
+					HTTP_Task_Msg.taskId      = cJSON_GetObjectItemCaseSensitive(Data,"taskId")->valueint;
 					strcpy(HTTP_Task_Msg.waypoints, cJSON_GetObjectItemCaseSensitive(Data,"waypoints")->valuestring);
 					HTTP_Task_Msg.targetIndex = cJSON_GetObjectItemCaseSensitive(Data,"targetIndex")->valueint;
-//					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
-//					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
+					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
+					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
 					
 					/*进行状态变换*/
 					Device_Run_Status.Alterstatus = Job_Working;
@@ -387,10 +388,12 @@ void USART_HTTP_jobPause_data(cJSON * object)
 	if(cJSON_IsNumber(Status)&&Status->valueint == 100)
 	{
 		request_num = 0;
-		
-		/*进行状态变换*/
-		Device_Run_Status.Alterstatus = Job_Pause;
-		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
+		if(Device_Run_Status.Curstatus != Job_Return)
+		{
+			/*进行状态变换*/
+			Device_Run_Status.Alterstatus = Job_Pause;
+			osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
+		}
 	}
 	else  printf("请求失败\r\n");
 }

@@ -60,6 +60,7 @@ l3__st_test\mqtt.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrapp
 l3__st_test\mqtt.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 l3__st_test\mqtt.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 l3__st_test\mqtt.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+l3__st_test\mqtt.o: ../Core/Inc/change_status.h
 l3__st_test\mqtt.o: ../Core/Inc/tim.h
 l3__st_test\mqtt.o: ../EC600U/Inc/gps.h
 l3__st_test\mqtt.o: ../NAV/Inc/nav.h

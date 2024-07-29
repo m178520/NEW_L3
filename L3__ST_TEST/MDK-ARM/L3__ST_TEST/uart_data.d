@@ -62,3 +62,4 @@ l3__st_test\uart_data.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h
 l3__st_test\uart_data.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h
 l3__st_test\uart_data.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 l3__st_test\uart_data.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+l3__st_test\uart_data.o: ../Core/Inc/change_status.h

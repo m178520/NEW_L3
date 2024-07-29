@@ -395,6 +395,11 @@
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
+              <FileName>change_status.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\change_status.c</FilePath>
+            </File>
+            <File>
               <FileName>deal_string.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\deal_string.c</FilePath>

@@ -16,6 +16,8 @@ extern cJSON * EC600U_MQTT_SEND_STATUS;
 
 extern osMessageQueueId_t HTTP_REQUEST_queueHandle;
 
+extern osEventFlagsId_t Device_Run_status_eventHandle;
+
 PID_TypeDef PID_angle_control;
 
 /*分割目前已获取的目标航点*/
@@ -52,6 +54,13 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 	pointToline_distance_t pointToline_info = {0};
 	static WGS84_axis_t Endpoint_XY = {0};
 	static Line_straight_param_t start_stop_line = {0};
+	/*如果前往的终点不正确，终点为（0，0）停止车辆的导航*/
+	if(stop_lat == 0 ||stop_lon == 0)  
+	{
+		if((osEventFlagsGet(Device_Run_status_eventHandle) & BIT_23) != 0)
+		osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
+	}
+	
 	if(Vehicle_To_Distance_Angle_flag == 0) //本次航线初次进入计算
 	{
 		/*求以起点为原点，终点的坐标*/

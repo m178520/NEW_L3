@@ -21,6 +21,7 @@ l3__st_test\http.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrapp
 l3__st_test\http.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 l3__st_test\http.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 l3__st_test\http.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+l3__st_test\http.o: ../Core/Inc/change_status.h
 l3__st_test\http.o: ../Core/Inc/main.h
 l3__st_test\http.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h
 l3__st_test\http.o: ../Core/Inc/stm32h7xx_hal_conf.h

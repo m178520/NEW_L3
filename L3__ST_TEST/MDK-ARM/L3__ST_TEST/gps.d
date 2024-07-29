@@ -19,6 +19,7 @@ l3__st_test\gps.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappe
 l3__st_test\gps.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 l3__st_test\gps.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 l3__st_test\gps.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+l3__st_test\gps.o: ../Core/Inc/change_status.h
 l3__st_test\gps.o: ../Core/Inc/main.h
 l3__st_test\gps.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h
 l3__st_test\gps.o: ../Core/Inc/stm32h7xx_hal_conf.h
