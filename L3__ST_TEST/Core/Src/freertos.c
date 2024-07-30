@@ -524,6 +524,7 @@ void EC600U_REC_task(void *argument)
 		}
 				else // 超时处理
 		{
+			printf("CHAOSHI");
 			if(Device_Run_Status.Curstatus == Poweron) //开机过程回复超时
 			{
 				if(Device_Poweron_status == Check_poweron)
@@ -658,8 +659,7 @@ void Device_Run_task(void *argument)
   {
     if(controlFlag == NALCont)
 		{
-			uxBits = osEventFlagsWait(Device_Run_status_eventHandle,  BIT_1 | BIT_3 |BIT_4 |BIT_5 | BIT_23,osFlagsWaitAll | osFlagsNoClear, 1000); //还有bit0暂时先不加入BIT_0 |  等待1s（暂时）打印不满足的条件，如果转换了sbus控制就转换模式
-		
+			uxBits = osEventFlagsWait(Device_Run_status_eventHandle,  BIT_1 | BIT_3 | BIT_4 | BIT_5 | BIT_23,osFlagsWaitAll | osFlagsNoClear, 1000); //还有bit0暂时先不加入BIT_0 |  等待1s（暂时）打印不满足的条件，如果转换了sbus控制就转换模式
 			if( (uxBits & ( BIT_1 | BIT_3 | BIT_4 | BIT_5 | BIT_23))  == ( BIT_1 | BIT_3 | BIT_4 | BIT_5 | BIT_23)) //是否满足启动的条件
 			{
 				if(Device_Run_Status.Curstatus == Job_Working || Device_Run_Status.Curstatus == Job_Return)                                                      //是否完成了可工作的准备
@@ -712,7 +712,11 @@ void Device_unusual_task(void *argument)
   for(;;)
   {
 		uxBits = osEventFlagsWait(Device_unusual_status_eventHandle, BIT_0 | BIT_1 ,osFlagsWaitAny, Device_unusual_time);
-		if( (uxBits & BIT_0)  != 0 )               //强制停止
+		if(uxBits == (uint32_t)osErrorTimeout) //如果超时 事件标志位超时得到的为-2，但是为uint32格式 实际为0xFFFFFFFE
+		{
+			osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);                //转变为启动
+		}
+		else if( (uxBits & BIT_0)  != 0 )               //强制停止
 		{
 			osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
 			HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_0);
@@ -727,10 +731,7 @@ void Device_unusual_task(void *argument)
 		{
 			osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
 		}
-		else //如果超时
-		{
-			osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);                //转变为启动
-		}
+		
     osDelay(1);
   }
   /* USER CODE END Device_unusual_task */

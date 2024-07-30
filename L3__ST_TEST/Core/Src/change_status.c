@@ -11,7 +11,7 @@ Change_Status_t Device_Run_Status =
 	Poweron,
 	Job_Wait
 };
-
+extern uint32_t Device_unusual_time;
 extern cJSON * EC600U_MQTT_SEND_STATUS;
 extern osMessageQueueId_t HTTP_REQUEST_queueHandle;
 extern osEventFlagsId_t Device_Run_status_eventHandle;
@@ -21,7 +21,7 @@ void change_status_fun()
 	switch(Device_Run_Status.Curstatus)
 	{
 		case Job_Wait:  //当前状态为空闲，只会进入到作业中 只会从http中获取航线并解析
-		/*无论是第一次运行还是在运行过程中重新运行,只要是开始任务，就需要重置标志位*/
+//		/*无论是第一次运行还是在运行过程中重新运行,只要是开始任务，就需要重置标志位*/
 			NAV_Control_Param_clear();
 		/*先将从http拿到的航点进行分割*/
 			waypoints_Parse(HTTP_Task_Msg.waypoints,",");
@@ -37,7 +37,7 @@ void change_status_fun()
 //					taskEXIT_CRITICAL();
 			
 			/*设置第23位让设备可以启动*/
-			osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);
+			Device_unusual_time   = 5000;
 		break;
 		
 		case Job_Working: //正在工作状态可以转化成为停止（空闲），作业暂停，作业完成，召回,遇到障碍物等
@@ -119,7 +119,7 @@ void change_status_fun()
 					if((osEventFlagsGet(Device_Run_status_eventHandle) & BIT_23) == 0) osEventFlagsSet(Device_Run_status_eventHandle,BIT_23);  //转变为启动
 					
 					/*如果在从working至pause再至working则不用管从http contiune哪里获取的航线点，如果是从return至pause再至continue就需要处理获取的航线，判断两者的依据为看是否当前航线点大于3个,因为每次召回我都将航线点数组清除，然后把关于充电装位置的三个数据写入，那么第4个数据则为空*/
-					if(wait_run_point[3][0][0] == 0x00 || wait_run_point[4][0][0] == 0x00)
+				if(wait_run_point[3][0] == '\0' || wait_run_point[4][0] == '\0')
 					{
 						NAV_Control_Param_clear();
 						waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
@@ -184,7 +184,7 @@ void change_status_fun()
 					Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
 					Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
 				
-												/*上传APP状态信息*/
+					/*上传APP状态信息*/
 					/*进入临界区*/
 //							taskENTER_CRITICAL();
 					Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",Device_Run_Status.Curstatus,"task","tStatus");

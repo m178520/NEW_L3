@@ -226,7 +226,7 @@ NAV_output_t NAV_Control()
 	uint32_t BIT=0;
 	NAV_output_t NAV_output;
 	double Lenght,process = 0;
-	double Angle,Speed = 90;
+	double Angle,Speed = 120;
 	pointToline_distance_t pointToline_info = {0};
 	tracking_control_t     tracking_control = {0};
 	if(waypoints_run_status.current_toindex != 0) //不是前往初始点
@@ -295,7 +295,7 @@ NAV_output_t NAV_Control()
 			}
 			
 			Vehicle_To_Distance_Angle_flag = 0;
-			
+			HTTP_updateRoute_Request_flag  = 0; //获取分段航点之后需要进入终点后再置位，不然会获取多次
 			waypoints_run_status.processed_allnum ++;
 			
 		}
@@ -311,13 +311,14 @@ NAV_output_t NAV_Control()
 		{
 			if(waypoints_run_status.Parse_num > 10)
 			{
-				++waypoints_run_status.current_toindex  ;
+				++waypoints_run_status.current_toindex;
 			  waypoints_run_status.current_fromindex = 0;
 			}
 			else waypoints_run_status.current_toindex++;
 		}			
 
 		Vehicle_To_Distance_Angle_flag = 0;
+		HTTP_updateRoute_Request_flag  = 0; //获取分段航点之后需要进入终点后再置位，不然会获取多次
 		
 		waypoints_run_status.processed_allnum ++;
 		

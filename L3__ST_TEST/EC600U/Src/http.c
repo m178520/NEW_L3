@@ -122,12 +122,13 @@ void HTTP_updateRoute_Request(void)
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
+	
+	printf("%d\r\n",waypoints_run_status.Parse_num);
 	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
 	if(trans_Msg != NULL)
 	{
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
 		HTTP_post(UPDATEROUTE_URL,trans_Msg,Header);
-		printf("航线获取\r\n");
 		cJSON_free(trans_Msg);
 	}
 }
@@ -188,7 +189,6 @@ void USART_HTTP_data(cJSON * object)
 			/*获取分段航点请求*/
 			else if(strstr(cJSON_GetObjectItemCaseSensitive(object,"url")->valuestring,"updateRoute"))
 			{
-				printf("分段航电\r\n");
 				USART_HTTP_updateRoute_data(Msg);
 			}
 			
@@ -345,6 +345,9 @@ void USART_HTTP_jobStart_data(cJSON * object)
 			Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",HTTP_Task_Msg.zoneId,"task","zoneId");
 			Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",HTTP_Task_Msg.taskId,"task","taskId");
 		}
+		
+//		NAV_Control_Param_clear();
+//		waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
 		/*进行状态变换*/
 		Device_Run_Status.Alterstatus = Job_Working;
 		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
@@ -434,7 +437,7 @@ void USART_HTTP_updateRoute_data(cJSON * object)
 //					HTTP_Task_Msg.offSet      = cJSON_GetObjectItemCaseSensitive(Data,"offSet")->valueint;
 //					HTTP_Task_Msg.taskNum     = cJSON_GetObjectItemCaseSensitive(Data,"taskNum")->valueint;
 				waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
-				HTTP_updateRoute_Request_flag = 0;
+				
 			}
 	}
 	else  printf("请求失败\r\n");
@@ -453,7 +456,7 @@ void USART_HTTP_goToCharge_data(cJSON * object)
 			if(cJSON_IsObject(Data)&&(Data != NULL ))
 			{
 				Charge_info.chargeId = cJSON_GetObjectItemCaseSensitive(Data,"chargeId")->valueint;
-				strcpy(Charge_info.navWaypoints, cJSON_GetObjectItemCaseSensitive(Data,"chargeId")->valuestring);
+				strcpy(Charge_info.navWaypoints, cJSON_GetObjectItemCaseSensitive(Data,"navWaypoints")->valuestring);
 				
 				/*进行状态变换*/
 			Device_Run_Status.Alterstatus = Job_Return;
