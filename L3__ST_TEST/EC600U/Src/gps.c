@@ -55,7 +55,6 @@ void SPI1_GPS_data(uint8_t *data)
 			strcpy(gnss.CourseAngle ,  CourseAngle->valuestring);
 			strcpy(gnss.speed ,        speed->valuestring);
 			
-			cJSON_Delete(GPS);
 			/*退出临界区*/
 			taskEXIT_CRITICAL();
 			if(strcmp(gnss.Mode,"4") == 0)
@@ -78,11 +77,10 @@ void SPI1_GPS_data(uint8_t *data)
 					EC600U_REC_block_time = portMAX_DELAY; 
 					APP_Info_Submit_time = 8000;
 					osSemaphoreRelease(APP_Info_Submit_SempHandle); //上传一次APP信息 用于解除阻塞，等待以上时间再开启MQTT
-				}
-				
-				
+				}	
 			}
 		}
+		cJSON_Delete(GPS);
 	}
 	else printf("GPS消息出错\r\n");
 }

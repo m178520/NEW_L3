@@ -22,12 +22,18 @@ void USART_Imei_data(cJSON* object);
 osStatus_t uart4_send_data_apply(uint8_t *data,uint16_t len)
 {
 	osStatus_t status;
+	
+	/*进入临界区*/
+		taskENTER_CRITICAL();
 	memset(UART4TxData[UART4_fifo.usTxWrite],0,UART4_Max_Txbuf_size);
 	memcpy(UART4TxData[UART4_fifo.usTxWrite],data,len);
 	if (++UART4_fifo.usTxWrite >= UART4_fifo.usTxBufSize)
 	{
 		UART4_fifo.usTxWrite = 0;
 	}
+	/*退出临界区*/
+		taskEXIT_CRITICAL();
+	
 	if (osMessageQueueGetCount(uart4_send_semp_queueHandle) < UART4_fifo.usTxBufSize)
 	{
 		status = osMessageQueuePut(uart4_send_semp_queueHandle,&len,0,10);

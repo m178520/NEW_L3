@@ -782,7 +782,7 @@ void VCU_send_task(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		err = osSemaphoreAcquire (CAN_send_sempHandle, 30);
+		err = osSemaphoreAcquire (CAN_send_sempHandle, 50);
 		if(err == osOK)
 		{
 			/* ∑¢ÀÕ–≈œ¢ */

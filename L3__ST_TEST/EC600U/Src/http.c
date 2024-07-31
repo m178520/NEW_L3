@@ -123,7 +123,7 @@ void HTTP_updateRoute_Request(void)
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
 	
-	printf("%d\r\n",waypoints_run_status.Parse_num);
+
 	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
 	if(trans_Msg != NULL)
 	{
@@ -346,8 +346,8 @@ void USART_HTTP_jobStart_data(cJSON * object)
 			Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",HTTP_Task_Msg.taskId,"task","taskId");
 		}
 		
-//		NAV_Control_Param_clear();
-//		waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
+		NAV_Control_Param_clear();
+		waypoints_Parse(HTTP_Task_Msg.waypoints,",");  /*处理接收到的航线*/
 		/*进行状态变换*/
 		Device_Run_Status.Alterstatus = Job_Working;
 		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换

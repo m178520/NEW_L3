@@ -38,10 +38,10 @@ void waypoints_Parse(char *string,char * str)
 				if (j >= 2)  break;
 				lon_lat = strtok(NULL, " ");
 		}
+		if (i >= 10)  break;
 		waypoints_run_status.Parse_index++;
 		if(waypoints_run_status.Parse_index >= 50) waypoints_run_status.Parse_index = 0;
 		waypoints_run_status.Parse_num  ++;
-		if (i >= 10)  break;
 		temp = strtok(temp+strlen(q[k-1]) + strlen(q[k-2])+2, str); 
 	}
 }
@@ -63,6 +63,8 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 	
 	if(Vehicle_To_Distance_Angle_flag == 0) //本次航线初次进入计算
 	{
+		
+		printf("第%d次,,%.10f,%.10f,%.10f,%.10f\r\n", waypoints_run_status.current_toindex , start_lat,  start_lon,  stop_lat,  stop_lon);
 		/*求以起点为原点，终点的坐标*/
 		Endpoint_XY = GPStoXY(start_lat,start_lon,stop_lat,stop_lon);
 		
@@ -90,9 +92,9 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 	{
 		Angle = - (gnss_Angle-90);
 	}
-	
-	Vehicle_XY.x += cos(Angle * PI / 180);
-	Vehicle_XY.y += sin(Angle * PI / 180);
+	//将车坐标系作为车辆的点，下面两句是以后接收机位置为基点进行平移坐标系
+	Vehicle_XY.x += 1.5*cos(Angle * PI / 180);
+	Vehicle_XY.y += 1.5*sin(Angle * PI / 180);
 	
 	
 	pointToline_info.gnss_Angle = gnss_Angle;

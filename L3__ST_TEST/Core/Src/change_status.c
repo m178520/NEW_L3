@@ -22,9 +22,9 @@ void change_status_fun()
 	{
 		case Job_Wait:  //当前状态为空闲，只会进入到作业中 只会从http中获取航线并解析
 //		/*无论是第一次运行还是在运行过程中重新运行,只要是开始任务，就需要重置标志位*/
-			NAV_Control_Param_clear();
-		/*先将从http拿到的航点进行分割*/
-			waypoints_Parse(HTTP_Task_Msg.waypoints,",");
+//			NAV_Control_Param_clear();
+//		/*先将从http拿到的航点进行分割*/
+//			waypoints_Parse(HTTP_Task_Msg.waypoints,",");
 			/*设置当前状态*/
 			Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
 			Device_Run_Status.Curstatus = Device_Run_Status.Alterstatus;
