@@ -5,6 +5,7 @@
 #include "math.h"
 #include "uart_data.h"
 #include "motor.h"
+#include "string.h"
 
 char   HTTP_updateRoute_Request_flag = 0;       //用于将分段航线请求标志
 static char Vehicle_To_Distance_Angle_flag = 0; //用于将起点与终点线在每次只计算一次
@@ -24,9 +25,21 @@ PID_TypeDef PID_angle_control;
 void waypoints_Parse(char *string,char * str)
 {
 	char* q[20] = {0};
-	char* temp = strtok(string, str);
+	uint16_t num=0;
 	int k = 0;
-	for(int i=0; temp != NULL; i++)
+	char *p = string;
+	if(p[0] != 0 || p[7] != 0 || p[17] != 0)
+	{
+		while(p)
+		{
+			if(num != 0)  ++p;//第一次进入
+			num++;
+			p = strstr(p,str);
+		}
+	}
+	
+	char* temp = strtok(string, str);
+	for(int i=0; i < num; i++)
 	{
 //		printf("%s\r\n", temp);
 		char *lon_lat = strtok(temp, " ");
@@ -42,7 +55,7 @@ void waypoints_Parse(char *string,char * str)
 		waypoints_run_status.Parse_index++;
 		if(waypoints_run_status.Parse_index >= 50) waypoints_run_status.Parse_index = 0;
 		waypoints_run_status.Parse_num  ++;
-		temp = strtok(temp+strlen(q[k-1]) + strlen(q[k-2])+2, str); 
+		temp = strtok(temp+strlen(q[k-1]) + strlen(q[k-2])+2, str);
 	}
 }
 
@@ -54,6 +67,7 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 	pointToline_distance_t pointToline_info = {0};
 	static WGS84_axis_t Endpoint_XY = {0};
 	static Line_straight_param_t start_stop_line = {0};
+	
 	/*如果前往的终点不正确，终点为（0，0）停止车辆的导航*/
 	if(stop_lat == 0 ||stop_lon == 0)  
 	{
@@ -64,7 +78,7 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 	if(Vehicle_To_Distance_Angle_flag == 0) //本次航线初次进入计算
 	{
 		
-		printf("第%d次,,%.10f,%.10f,%.10f,%.10f\r\n", waypoints_run_status.current_toindex , start_lat,  start_lon,  stop_lat,  stop_lon);
+//		printf("第%d次,,%.10f,%.10f,%.10f,%.10f\r\n", waypoints_run_status.current_toindex , start_lat,  start_lon,  stop_lat,  stop_lon);
 		/*求以起点为原点，终点的坐标*/
 		Endpoint_XY = GPStoXY(start_lat,start_lon,stop_lat,stop_lon);
 		
@@ -93,8 +107,8 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 		Angle = - (gnss_Angle-90);
 	}
 	//将车坐标系作为车辆的点，下面两句是以后接收机位置为基点进行平移坐标系
-	Vehicle_XY.x += 1.5*cos(Angle * PI / 180);
-	Vehicle_XY.y += 1.5*sin(Angle * PI / 180);
+	Vehicle_XY.x += cos(Angle * PI / 180);
+	Vehicle_XY.y += sin(Angle * PI / 180);
 	
 	
 	pointToline_info.gnss_Angle = gnss_Angle;
@@ -129,6 +143,7 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 tracking_control_t tracking_control_Arith(PID_TypeDef *PID_InitStruct,pointToline_distance_t info)
 {
 	double lenght = FIXED_LENGHT;
+	double atan_value = 0;
 	if(info.pointToline < 0.5) lenght *=2;
 	tracking_control_t tracking_control = {0};
 	#if CONTROL_WAY == 0 //直接拐 在线的左边就向右拐 距离作为拐弯的大小值
@@ -160,20 +175,27 @@ tracking_control_t tracking_control_Arith(PID_TypeDef *PID_InitStruct,pointTolin
 		tracking_control.foot_point = Line_inter_point;
 		
 		/*将垂足至三角形边长为一定值的坐标求出*/
+	
+	if(info.origin_start_stop_line_param.k == inf)            atan_value = 90 * PI / 180;
+	else if (info.origin_start_stop_line_param.k == -inf)			atan_value = -(90 * PI / 180);
+	else                                                      atan_value = atan(info.origin_start_stop_line_param.k);
 		if(info.Endpoint_XY.x >=0)
 		{
-			y = Line_inter_point.y + lenght * sin(atan(info.origin_start_stop_line_param.k));
-			x = Line_inter_point.x + lenght * cos(atan(info.origin_start_stop_line_param.k));
+			y = Line_inter_point.y + lenght * sin(atan_value);
+			x = Line_inter_point.x + lenght * cos(atan_value);
 		}
 		else
 		{
-			y = Line_inter_point.y - lenght * sin(atan(info.origin_start_stop_line_param.k));
-			x = Line_inter_point.x - lenght * cos(atan(info.origin_start_stop_line_param.k));
+			y = Line_inter_point.y - lenght * sin(atan_value);
+			x = Line_inter_point.x - lenght * cos(atan_value);
 		}
 		/*求出直线的角度*/
 		target_line = line_fun(info.origin_Vehicle_XY.x,info.origin_Vehicle_XY.y,x,y);
 		
-		double degree = atan(target_line.k) * 180.0 / PI;
+		if(target_line.k == inf)     															atan_value = 90 * PI / 180;
+		else if(target_line.k == -inf)														atan_value = -(90 * PI / 180);
+		else                                                      atan_value = atan(target_line.k);
+		double degree = atan_value * 180.0 / PI;
 		
 		if(y-info.origin_Vehicle_XY.y >= 0 && x - info.origin_Vehicle_XY.x < 0) //如果位于第二象限
 		{
@@ -231,7 +253,7 @@ NAV_output_t NAV_Control()
 	double Angle,Speed = 120;
 	pointToline_distance_t pointToline_info = {0};
 	tracking_control_t     tracking_control = {0};
-	if(waypoints_run_status.current_toindex != 0) //不是前往初始点
+	if(waypoints_run_status.processed_allnum != 0) //不是前往初始点
 	{
 		/*求车辆点至目标航线垂直距离与方向*/
 		pointToline_info	= pointToline_distance(strtod(gnss.Lat,NULL),strtod(gnss.Lon,NULL),strtod(wait_run_point[waypoints_run_status.current_fromindex][0],NULL),strtod(wait_run_point[waypoints_run_status.current_fromindex][1],NULL),strtod(wait_run_point[waypoints_run_status.current_toindex][0],NULL),strtod(wait_run_point[waypoints_run_status.current_toindex][1],NULL));
@@ -243,7 +265,8 @@ NAV_output_t NAV_Control()
 	}
 	/*执行终点判定*/
 	/*通过判断是否到达终点计算*/
-	if(Terminal_decision(GPStoXY(strtod(gnss.Lat,NULL),strtod(gnss.Lon,NULL),strtod(wait_run_point[waypoints_run_status.current_toindex][0],NULL),strtod(wait_run_point[waypoints_run_status.current_toindex][1],NULL)).length))/*未到达终点*/
+//	if(Terminal_decision(GPStoXY(strtod(gnss.Lat,NULL),strtod(gnss.Lon,NULL),strtod(wait_run_point[waypoints_run_status.current_toindex][0],NULL),strtod(wait_run_point[waypoints_run_status.current_toindex][1],NULL)).length))/*未到达终点*/
+	if(Terminal_decision(sqrt((pointToline_info.origin_Vehicle_XY.x-pointToline_info.Endpoint_XY.x) * (pointToline_info.origin_Vehicle_XY.x-pointToline_info.Endpoint_XY.x) + (pointToline_info.origin_Vehicle_XY.y-pointToline_info.Endpoint_XY.y) * (pointToline_info.origin_Vehicle_XY.y-pointToline_info.Endpoint_XY.y))))
 {
 		/*轨迹跟踪计算*/
 		tracking_control = tracking_control_Arith(&PID_angle_control,pointToline_info);
@@ -265,16 +288,15 @@ NAV_output_t NAV_Control()
 		/*求出垂足与起点的距离用于进度计算*/
 		if((tracking_control.foot_point.x * pointToline_info.Endpoint_XY.x)>= 0 && (tracking_control.foot_point.y * pointToline_info.Endpoint_XY.y)>=0) //说明垂足与终点在一个象限
 		{
-			/*起点为（0，0） 长度就为根号下a方加b方*/
-			Lenght = sqrt(tracking_control.foot_point.x * tracking_control.foot_point.x + tracking_control.foot_point.y * tracking_control.foot_point.y );
+			Lenght = sqrt(tracking_control.foot_point.x  * tracking_control.foot_point.x + tracking_control.foot_point.y  * tracking_control.foot_point.y );
 		}
-	  else
+		else
 		{
 			Lenght = 0;
 		}
-		process = Lenght / (pointToline_info.StartToTerminal - TERMINAL_RANGE);
+			process = Lenght / pointToline_info.StartToTerminal;
 	
-		if(process >= (TERMINAL_RANGE/ (pointToline_info.StartToTerminal - TERMINAL_RANGE))+1)//说明到达终点
+		if(process >= 1)//说明到达终点
 		{
 			if(waypoints_run_status.current_toindex > 0)
 			{

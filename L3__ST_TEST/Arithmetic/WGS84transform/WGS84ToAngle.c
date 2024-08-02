@@ -41,10 +41,10 @@ Line_straight_param_t line_fun(double start_x,double start_y,double dest_x,doubl
 	double dy = dest_y - start_y;
 	double dx = dest_x - start_x;
 	
-	if (fabs(dx) < 0.0001) 
+	if (dx == 0.0) 
 	{
-		if(dy > 0) 					 Line_straight_param.k = 9999999;
-		else if(dy < 0)      Line_straight_param.k = -9999999;
+		if(dy > 0) 					 Line_straight_param.k = inf;
+		else if(dy < 0)      Line_straight_param.k = -inf;
 		else                 Line_straight_param.k = 0;
 	}
 	else                   Line_straight_param.k = dy / dx; 

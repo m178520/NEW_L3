@@ -76,7 +76,7 @@ void HTTP_jobPause_Request(void)
 	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lat,NULL),"pauseLat"); 
 	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lon,NULL),"pauseLon");
 	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"progress");
-	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.current_toindex,"targetIndex");
+	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"targetIndex");
 	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
 	
@@ -85,8 +85,8 @@ void HTTP_jobPause_Request(void)
 	{
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
 		HTTP_post(JOBPAUSE_URL,trans_Msg,Header);
-		cJSON_free(trans_Msg);
 	}
+	cJSON_free(trans_Msg);
 }
 
 /*继续工作消息发送*/
@@ -118,7 +118,7 @@ void HTTP_updateRoute_Request(void)
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"progress");  /* 暂时未想好怎么写 */
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"size");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.current_toindex,"tarIndex");
+	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.processed_allnum,"tarIndex");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
@@ -129,8 +129,8 @@ void HTTP_updateRoute_Request(void)
 	{
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
 		HTTP_post(UPDATEROUTE_URL,trans_Msg,Header);
-		cJSON_free(trans_Msg);
 	}
+	cJSON_free(trans_Msg);
 }
 
 /*获取充电桩消息发送*/
@@ -140,7 +140,7 @@ void HTTP_goToCharge_Request(void)
 	char url[150];
 	char Header[150];
 //	sprintf(data,"%c%s%d%c%s%d%c",'{',"\"zoneId\":",MQTT_Task_Msg.zoneId,',',"\"tarIndex\":",waypoints_run_status.current_toindex,'}');
-	sprintf(data,"%c%s%d%c%s%d",'?',"zoneId=",MQTT_Task_Msg.zoneId,'&',"tarIndex=",waypoints_run_status.current_toindex);
+	sprintf(data,"%c%s%d%c%s%d",'?',"zoneId=",MQTT_Task_Msg.zoneId,'&',"tarIndex=",waypoints_run_status.processed_allnum);
 	sprintf(url,"%s%s",CHARGE_URL,data);
 	insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d", "application/x-www-form-urlencoded;charset=UTF-8" ,Authen_info.deviceId,Authen_info.groupId);
 	HTTP_get(url,"\"\"",Header);
@@ -198,7 +198,7 @@ void USART_HTTP_data(cJSON * object)
 				USART_HTTP_goToCharge_data(Msg);
 			}
 		}
-		else if(cJSON_IsString(Msg)&&(Msg ->valuestring != NULL ))         //如果Msg是一个字符串，则说明上报MQTT的状态
+		else if(cJSON_IsString(Msg)&&(Msg ->valuestring != NULL ))         //如果Msg是一个字符串，则说明返回的为状态
 		{
 			fun = cJSON_GetObjectItemCaseSensitive(object,"fun");
 			if(cJSON_IsString(fun)&&(fun ->valuestring != NULL ))
@@ -218,7 +218,7 @@ void USART_HTTP_data(cJSON * object)
 						/*开始任务请求*/
 						else if(strstr(cJSON_GetObjectItemCaseSensitive(object,"url")->valuestring,"jobStart"))
 						{
-							printf("HTTP鉴权请求失败\r\n");
+							printf("HTTP开始请求失败\r\n");
 							BIT = BIT_1;
 							osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 						}
@@ -226,7 +226,7 @@ void USART_HTTP_data(cJSON * object)
 						/*暂停任务请求*/
 						else if(strstr(cJSON_GetObjectItemCaseSensitive(object,"url")->valuestring,"jobPause"))
 						{
-							printf("HTTP开始任务请求失败\r\n");
+							printf("HTTP暂停任务请求失败\r\n");
 							BIT = BIT_2;
 							osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);
 						}

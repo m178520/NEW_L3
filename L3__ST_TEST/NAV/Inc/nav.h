@@ -11,12 +11,12 @@
 #define VEHICLE_DIRECT_LEFT  -1   //车辆左转
 #define VEHICLE_DIRECT_RIGHT 1    //车辆右转
 
-#define FIXED_LENGHT 0.8          //求车辆夹角与车辆至L长度点直线的夹角
+#define FIXED_LENGHT 0.5          //求车辆夹角与车辆至L长度点直线的夹角
 
 #define WAIT_RUN_POINT_NUM  50 
 #define PROCESSED_POINT_NUM 30 
 
-#define TERMINAL_RANGE      1     //以m为单位
+#define TERMINAL_RANGE      0.2     //以m为单位
 
 #define POINTTOLINE_THRES   1000  //车辆距离航线距离超过阈值 方向打满
 

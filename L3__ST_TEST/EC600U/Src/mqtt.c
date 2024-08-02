@@ -76,7 +76,7 @@ void APP_Info_Submit()
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lon,NULL),"property","lon");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.Lat,NULL),"property","lat");
 	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%f%s%s",strtod(gnss.CourseAngle,NULL),"property","yaw");
-	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",waypoints_run_status.current_toindex,"task","tarIndex");
+	Json_data_Change(EC600U_MQTT_SEND_STATUS,"%d%s%s",waypoints_run_status.processed_allnum,"task","tarIndex");
 //	/*退出临界区*/
 //	taskEXIT_CRITICAL();
 	
@@ -90,12 +90,12 @@ void APP_Info_Submit()
 //		HAL_UART_Transmit_DMA(&huart1,(uint8_t *)q,strlen(q));
 		EC600U_send_msg("MQTT","APP_pub",q,strlen(q)+80);
 //		osDelay(50);
-		cJSON_free(trans_Msg);
 	}
 	else
 	{
 		printf("上报信息转换失败\r\n");
 	}
+	cJSON_free(trans_Msg);
 }
 
 

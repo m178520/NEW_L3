@@ -80,7 +80,7 @@ void SPI1_GPS_data(uint8_t *data)
 				}	
 			}
 		}
-		cJSON_Delete(GPS);
 	}
 	else printf("GPSÏûÏ¢³ö´í\r\n");
+	cJSON_Delete(GPS);
 }

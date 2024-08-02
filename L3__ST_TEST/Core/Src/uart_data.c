@@ -110,7 +110,7 @@ void uart4_rec_data_apply(uint8_t *data,uint16_t len)
 	}
 	
 	//使用完成后一定要释放object对象
-	if(EC600U_MQTT_RECV_STATUS != NULL) cJSON_Delete(EC600U_MQTT_RECV_STATUS);
+	cJSON_Delete(EC600U_MQTT_RECV_STATUS);
 	//使用完一定要清除数组内内容
 }
 

@@ -6,6 +6,7 @@
 #include <math.h>
 
 #define PI 3.14159265
+#define inf 99999
 
 typedef struct {
 	double length;
