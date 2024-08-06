@@ -67,3 +67,4 @@ l3__st_test\nav.o: ../EC600U/Inc/http.h
 l3__st_test\nav.o: ../EC600U/Inc/mqtt.h
 l3__st_test\nav.o: ../EC600U/Inc/rtk_L1.h
 l3__st_test\nav.o: ../Core/Inc/motor.h
+l3__st_test\nav.o: ../Core/Inc/change_status.h

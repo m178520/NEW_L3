@@ -7,6 +7,8 @@
 #include "motor.h"
 #include "string.h"
 
+#include "change_status.h"
+
 char   HTTP_updateRoute_Request_flag = 0;       //用于将分段航线请求标志
 static char Vehicle_To_Distance_Angle_flag = 0; //用于将起点与终点线在每次只计算一次
 
@@ -25,38 +27,67 @@ PID_TypeDef PID_angle_control;
 void waypoints_Parse(char *string,char * str)
 {
 	char* q[20] = {0};
-	uint16_t num=0;
+//	uint16_t num=0;
 	int k = 0;
-	char *p = string;
-	if(p[0] != 0 || p[7] != 0 || p[17] != 0)
-	{
-		while(p)
-		{
-			if(num != 0)  ++p;//第一次进入
-			num++;
-			p = strstr(p,str);
-		}
-	}
+
+//	if(p[0] != 0 || p[7] != 0 || p[17] != 0)
+//	{
+//		while(p)
+//		{
+//			if(num != 0)  ++p;//第一次进入
+//			num++;
+//			p = strstr(p,str);
+//		}
+//	}
 	
-	char* temp = strtok(string, str);
-	for(int i=0; i < num; i++)
-	{
+//	char* temp = strtok(string, str);
+//	for(int i=0; temp != NULL; i++)
+//	{
 //		printf("%s\r\n", temp);
-		char *lon_lat = strtok(temp, " ");
-		for(int j=0; lon_lat != NULL ; j++)
-		{
+//		char *lon_lat = strtok(temp, " ");
+//		for(int j=0; lon_lat != NULL ; j++)
+//		{
 //				printf("%s\r\n", lon_lat);
-				strcpy(wait_run_point[i + (waypoints_run_status.Parse_index/10)*10][j],lon_lat); //让每次都是从0 10 20 30 .....整十开始
-				q[k++] = lon_lat;
-				if (j >= 2)  break;
-				lon_lat = strtok(NULL, " ");
+//				strcpy(wait_run_point[i + (waypoints_run_status.Parse_index/10)*10][j],lon_lat); //让每次都是从0 10 20 30 .....整十开始
+//				q[k++] = lon_lat;
+//				if (j >= 2)  break;
+//				lon_lat = strtok(NULL, " ");
+//		}
+//		if (i >= 10)  break;
+//		waypoints_run_status.Parse_index++;
+//		if(waypoints_run_status.Parse_index >= 50) waypoints_run_status.Parse_index = 0;
+//		waypoints_run_status.Parse_num  ++;
+//		if(strstr(temp,",")) temp = strtok(temp+strlen(q[k-1]) + strlen(q[k-2])+2, str);
+//	}
+		uint16_t lenght = strlen(string);
+	  char *p = string;                  //初始位置
+		char* temp = strstr(p, str);  //找到，的位置
+		*temp = 0;
+		
+		for(int i=0; *temp == 0 || temp == NULL ; i++)
+		{
+			char *lon_lat = strtok(p, " ");
+			for(int j=0; lon_lat != NULL ; j++)
+			{
+//					printf("%s\r\n", lon_lat);
+					strcpy(wait_run_point[i + (waypoints_run_status.Parse_index/10)*10][j],lon_lat); //让每次都是从0 10 20 30 .....整十开始
+					q[k++] = lon_lat;
+					if (j >= 2)  break;
+					lon_lat = strtok(NULL, " ");
+			}
+			
+			waypoints_run_status.Parse_index++;
+			if(waypoints_run_status.Parse_index >= 50) waypoints_run_status.Parse_index = 0;
+			waypoints_run_status.Parse_num  ++;
+			
+			p += strlen(q[k-1]) + strlen(q[k-2])+2;
+			if(p >= string + lenght) break;
+
+			temp = strstr(p, str);  //找到，的位置
+			if(temp != NULL) *temp = 0;
+			else						 continue;
 		}
-		if (i >= 10)  break;
-		waypoints_run_status.Parse_index++;
-		if(waypoints_run_status.Parse_index >= 50) waypoints_run_status.Parse_index = 0;
-		waypoints_run_status.Parse_num  ++;
-		temp = strtok(temp+strlen(q[k-1]) + strlen(q[k-2])+2, str);
-	}
+
 }
 
 
@@ -91,25 +122,40 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 	WGS84_axis_t Vehicle_XY  = GPStoXY(Endpoint_XY.origin_lat,Endpoint_XY.origin_lon,Vehicle_lat,Vehicle_lon);
 	
 	double gnss_Angle = strtod(gnss.CourseAngle,NULL);
-	/* 转换坐标系为车头坐标系 */
-	//将gnss方向坐标以北为0转换至以东为0
-	if(gnss_Angle > 180)
-	{
-		gnss_Angle = gnss_Angle - 360.0;
-	}
+
 	
-	if(gnss_Angle < -90)
+		
+	if(Device_Run_Status.Curstatus == Job_Return && waypoints_run_status.processed_allnum >= 1 ) //说明在返航中到达了第一个点，需要调转车头，将车尾作为车头进行行走，左右轮需要调换，RTK导航方向需要掉头
 	{
-		Angle =-180 - (gnss_Angle+90);
+		/*在倒车时不需要将车体坐标系平移*/
+		/*但是需要将rtk方向反转180*/
+		if(gnss_Angle >= 180)   gnss_Angle -= 180;
+		else                    gnss_Angle += 180;
+		if(gnss_Angle > 180)
+		{
+			gnss_Angle = gnss_Angle - 360.0;
+		}
 	}
 	else
 	{
-		Angle = - (gnss_Angle-90);
+		if(gnss_Angle > 180)
+		{
+			gnss_Angle = gnss_Angle - 360.0;
+		}
+		/* 转换坐标系为车头坐标系 */
+		//将gnss方向坐标以北为0转换至以东为0
+		if(gnss_Angle < -90)
+		{
+			Angle =-180 - (gnss_Angle+90);
+		}
+		else
+		{
+			Angle = - (gnss_Angle-90);
+		}
+		//将车坐标系作为车辆的点，下面两句是以后接收机位置为基点进行平移坐标系
+		Vehicle_XY.x += 1.2 * cos(Angle * PI / 180);
+		Vehicle_XY.y += 1.2 * sin(Angle * PI / 180);
 	}
-	//将车坐标系作为车辆的点，下面两句是以后接收机位置为基点进行平移坐标系
-	Vehicle_XY.x += cos(Angle * PI / 180);
-	Vehicle_XY.y += sin(Angle * PI / 180);
-	
 	
 	pointToline_info.gnss_Angle = gnss_Angle;
 	
@@ -214,7 +260,6 @@ tracking_control_t tracking_control_Arith(PID_TypeDef *PID_InitStruct,pointTolin
 		target_degree = -1.0 * target_degree +90;
 		
 
-		
 		double err = info.gnss_Angle - target_degree;
 		double fabs_err = fabs(err);
 		
@@ -280,8 +325,16 @@ NAV_output_t NAV_Control()
 		
 		/*驱动控制*/
 		//Speed目前手动给值
-		NAV_output.RSpeed =  Speed + Angle;
-		NAV_output.LSpeed =  Speed - Angle;
+		if(Device_Run_Status.Curstatus == Job_Return && waypoints_run_status.processed_allnum >= 1 ) //说明在返航中到达了第一个点，需要调转车头，将车尾作为车头进行行走，左右轮需要调换，RTK导航方向需要掉头
+		{
+			NAV_output.RSpeed =  Speed + Angle;
+			NAV_output.LSpeed =  Speed - Angle;
+		}
+		else
+		{
+			NAV_output.RSpeed =  Speed - Angle;
+			NAV_output.LSpeed =  Speed + Angle;
+		}
 
 		/*进度计算*/
 	  /*通过是否到达指定长度计算*/
@@ -356,8 +409,14 @@ NAV_output_t NAV_Control()
 	{
 		if(waypoints_run_status.processed_allnum == HTTP_Task_Msg.taskNum)  //说明完成了所有航线
 		{
-			BIT = BIT_4;
-			osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);//交给HTTP进行任务完成请求
+			if((osEventFlagsGet(Device_Run_status_eventHandle) & BIT_23) != 0)
+					osEventFlagsClear(Device_Run_status_eventHandle,BIT_23);                //不可启动
+			if(HTTP_updateRoute_Request_flag == 0)                            //d终点后执行一次完成任务HTTP请求
+			{
+				HTTP_updateRoute_Request_flag++;
+				BIT = BIT_4;
+				osMessageQueuePut(HTTP_REQUEST_queueHandle, &BIT , 0 ,10);//交给HTTP进行任务完成请求
+			}
 		}
 	}
 	else

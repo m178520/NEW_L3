@@ -277,17 +277,15 @@ cJSON * Json_data_Change( cJSON *item,char const* const_Format, ...)
 		}
 		if(Format[0] == 's')
 		{
-			memset(new_item->valuestring,0,strlen(new_item->valuestring));
-			strcpy(new_item->valuestring,addr);
+			cJSON_SetValuestring(new_item,addr);
 		}
 		else if(Format[0] == 'd')
 		{
-			new_item->valueint = number;
-			new_item->valuedouble = number;
+			cJSON_SetNumberHelper(new_item,number);
 		}
 		else if(Format[0] == 'f')
 		{
-			new_item->valuedouble = f_number;
+			cJSON_SetNumberHelper(new_item,f_number);
 		}
 	}
 	else printf("输入格式不正确错误\r\n");

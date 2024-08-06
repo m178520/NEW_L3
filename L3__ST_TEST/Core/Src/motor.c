@@ -1,6 +1,9 @@
 #include "motor.h"
 #include "sbus.h"
 #include "fdcan.h"
+#include "nav.h"
+
+#include "change_status.h"
 
 #include "stdint.h"
 #include "string.h"
@@ -30,9 +33,18 @@ CAN_Msg_t Direct_Drive_motor(int16_t RSpeed, int16_t LSpeed)
 	int32_t LiftSpeed  = 0;
 	if(controlFlag == NALCont)
 	{	
-		RightSpeed = (int)sbus_to_range(RSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
-		LiftSpeed  = -(int)sbus_to_range(LSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
 		
+
+		if(Device_Run_Status.Curstatus == Job_Return && waypoints_run_status.processed_allnum >= 1 ) //说明在返航中到达了第一个点，需要调转车头，将车尾作为车头进行行走，左右轮需要调换
+		{
+			RightSpeed = -(int)sbus_to_range(RSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
+			LiftSpeed  = (int)sbus_to_range(LSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
+		}
+		else
+		{
+			RightSpeed = (int)sbus_to_range(RSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
+			LiftSpeed  = -(int)sbus_to_range(LSpeed, NALNewMin, NALNewMax, NALOldMin, NALOldMax);
+		}
 		if(RightSpeed <= 30 && RightSpeed >= -30)
 		{
 			RightSpeed = CANSpeedStop;

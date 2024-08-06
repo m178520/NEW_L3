@@ -57,10 +57,10 @@ void SPI1_GPS_data(uint8_t *data)
 			
 			/*退出临界区*/
 			taskEXIT_CRITICAL();
+			if(osSemaphoreGetCount (GPS_rec_exec_sempHandle)<1)    osSemaphoreRelease(GPS_rec_exec_sempHandle);
 			if(strcmp(gnss.Mode,"4") == 0)
 			{
 				osEventFlagsSet(Device_Run_status_eventHandle,BIT_5);
-				if(osSemaphoreGetCount (GPS_rec_exec_sempHandle)<1)    osSemaphoreRelease(GPS_rec_exec_sempHandle);
 			}
 			else
 			{
@@ -70,14 +70,15 @@ void SPI1_GPS_data(uint8_t *data)
 			if((osEventFlagsGet(Device_Run_status_eventHandle) &  BIT_4) ==  0)    // 已经收到4G模块发来的定位信息 但还没有置事件标志位
 			{
 				osEventFlagsSet(Device_Run_status_eventHandle,BIT_4);                //设置RTK_L1标志位
-				if(Device_Run_Status.Curstatus == Poweron)                 //转换状态为作业等待
+				if(Device_Run_Status.Curstatus == Poweron)                           //转换状态为作业等待
 				{
 					Device_Run_Status.Prestatus = Device_Run_Status.Curstatus;
 					Device_Run_Status.Curstatus = Job_Wait;
 					EC600U_REC_block_time = portMAX_DELAY; 
 					APP_Info_Submit_time = 8000;
-					osSemaphoreRelease(APP_Info_Submit_SempHandle); //上传一次APP信息 用于解除阻塞，等待以上时间再开启MQTT
-				}	
+				}
+				else APP_Info_Submit_time = 3000;
+				osSemaphoreRelease(APP_Info_Submit_SempHandle); //上传一次APP信息 用于解除阻塞，等待以上时间再开启MQTT
 			}
 		}
 	}

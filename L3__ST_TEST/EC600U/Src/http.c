@@ -115,13 +115,14 @@ void HTTP_updateRoute_Request(void)
 	char Header[150];
 	char *trans_Msg;
 	
+	/*如果还是不行就变成，每次进行这个申请就只是编辑字符串*/
+	
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"progress");  /* 暂时未想好怎么写 */
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"size");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.processed_allnum,"tarIndex");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
 	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
-	
 	
 
 	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
@@ -410,7 +411,7 @@ void USART_HTTP_jobFinish_data(cJSON * object)
 	if(cJSON_IsNumber(Status)&&Status->valueint == 100)
 	{
 		request_num = 0;
-
+		printf("完成作业\r\n");
 		/*进行状态变换*/
 		Device_Run_Status.Alterstatus = Job_Wait;
 		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
@@ -457,6 +458,8 @@ void USART_HTTP_goToCharge_data(cJSON * object)
 			{
 				Charge_info.chargeId = cJSON_GetObjectItemCaseSensitive(Data,"chargeId")->valueint;
 				strcpy(Charge_info.navWaypoints, cJSON_GetObjectItemCaseSensitive(Data,"navWaypoints")->valuestring);
+				
+				HTTP_Task_Msg.taskNum  = 3;
 				
 				/*进行状态变换*/
 			Device_Run_Status.Alterstatus = Job_Return;
