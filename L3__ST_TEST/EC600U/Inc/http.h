@@ -72,28 +72,26 @@ void HTTP_goToCharge_Request(void);
 #define HTTP_REQUEST_MSG(URL,DATA,HEADER) "{\"url\":\""URL"\",\"data\":"DATA",\"Header\":"HEADER"}"
 #define HTTP_REQUEST_HEADER_MSG(TYPE,DEVICEID,GROUPID) "{\"Content-Type\":\""TYPE"\",\"deviceId\":\""DEVICEID"\",\"groupId\":\""GROUPID"\"}"
 
-#define UPDATE_ROUTE_PARAM "\
+#define UPDATE_ROUTE_PARAM(progress,size,startIndex,tarIndex,taskId,zoneId) "\
 {\
-  \"progress\": 0,\
-  \"size\": 0,\
-  \"startIndex\": 0,\
-  \"tarIndex\": 0,\
-	\"taskId\": 0,\
-  \"zoneId\": 0\
+  \"progress\": "progress",\
+  \"size\": "size",\
+  \"startIndex\": "startIndex",\
+  \"tarIndex\": "tarIndex",\
+	\"taskId\": "taskId",\
+  \"zoneId\": "zoneId"\
 }\
 "
 
-#define PAUSE_PARAM "\
+#define PAUSE_PARAM(pauseLat,pauseLon,progress,targetIndex,zoneId) "\
 {\
-  \"pauseLat\": 0,\
-  \"pauseLon\": 0,\
-  \"progress\": 0,\
-  \"targetIndex\": 0,\
-  \"zoneId\": 0\
+  \"pauseLat\": "pauseLat",\
+  \"pauseLon\": "pauseLon",\
+  \"progress\": "progress",\
+  \"targetIndex\": "targetIndex",\
+  \"zoneId\": "zoneId"\
 }\
 "
-extern char Update_Route_param[];
-extern char Pause_param[];
 
 #endif
 

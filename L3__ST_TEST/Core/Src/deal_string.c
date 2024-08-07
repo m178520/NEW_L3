@@ -93,6 +93,7 @@ void insert_str(char *str,char* q,char const* const_Format, ...)
 		int num = 0;
 		char* addr;
 		int number=0;
+		double f_number=0;
 		strcpy(q,str);
 		for(int j=0;j<len;j++)
 		{
@@ -106,6 +107,11 @@ void insert_str(char *str,char* q,char const* const_Format, ...)
 			{
 				number = va_arg(ap,int);
 				sprintf(q,"%s%d%s",q,number,str+num);
+			}
+			else if(Format[j] == 'f')
+			{
+				f_number= va_arg(ap,double);
+				sprintf(q,"%s%f%s",q,f_number,str+num);
 			}
 		}
 	}

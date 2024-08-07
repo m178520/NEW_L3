@@ -43,8 +43,6 @@ extern uint8_t power_count; //用于EC600U上电记次数使用
 /* USER CODE BEGIN PTD */
 
 cJSON * EC600U_MQTT_SEND_STATUS;
-cJSON * EC600U_HTTP_jobPause;
-cJSON * EC600U_HTTP_updateRoute;
 
 uint32_t GPS_REC_block_time    = portMAX_DELAY;
 uint32_t EC600U_REC_block_time = portMAX_DELAY;
@@ -577,8 +575,6 @@ void HTTP_REQUEST_task(void *argument)
 	uint32_t Device_Run_Bits;
 	uint32_t uxBits = 0;
 	osStatus_t err;
-	EC600U_HTTP_updateRoute = StringToObject(Update_Route_param);
-	EC600U_HTTP_jobPause    = StringToObject(Pause_param);
   /* Infinite loop */
   for(;;)
   {

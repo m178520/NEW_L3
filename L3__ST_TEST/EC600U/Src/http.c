@@ -8,9 +8,6 @@ Authen_info_t Authen_info ={0};
 HTTP_task_t   HTTP_Task_Msg ={0};
 Charge_info_t Charge_info={0};
 
-char Update_Route_param[] = UPDATE_ROUTE_PARAM;
-char Pause_param[] = PAUSE_PARAM;
-
 extern char Imei[30];
 
 extern osEventFlagsId_t Device_Run_status_eventHandle;
@@ -71,22 +68,23 @@ void HTTP_jobStart_Request(void)
 void HTTP_jobPause_Request(void)
 {
 	char Header[150];
-	char *trans_Msg;
+//	char *trans_Msg;
+	char  data[100];
+//	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lat,NULL),"pauseLat"); 
+//	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lon,NULL),"pauseLon");
+//	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"progress");
+//	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"targetIndex");
+//	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
-	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lat,NULL),"pauseLat"); 
-	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lon,NULL),"pauseLon");
-	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"progress");
-	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"targetIndex");
-	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
 	
-	
-	trans_Msg = ObjectToString(EC600U_HTTP_jobPause);
-	if(trans_Msg != NULL)
-	{
+//	trans_Msg = ObjectToString(EC600U_HTTP_jobPause);
+//	if(trans_Msg != NULL)
+//	{
+		insert_str(PAUSE_PARAM("\0","\0","\0","\0","\0"),data,"%f%f%f%d%d",strtod(gnss.Lat,NULL),strtod(gnss.Lon,NULL),waypoints_run_status.processed_allnum,waypoints_run_status.processed_allnum,HTTP_Task_Msg.zoneId);
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
-		HTTP_post(JOBPAUSE_URL,trans_Msg,Header);
-	}
-	cJSON_free(trans_Msg);
+		HTTP_post(JOBPAUSE_URL,data,Header);
+//	}
+//	cJSON_free(trans_Msg);
 }
 
 /*继续工作消息发送*/
@@ -113,25 +111,26 @@ void HTTP_jobFinish_Request(void)
 void HTTP_updateRoute_Request(void)
 {
 	char Header[150];
-	char *trans_Msg;
-	
-	/*如果还是不行就变成，每次进行这个申请就只是编辑字符串*/
-	
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"progress");  /* 暂时未想好怎么写 */
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"size");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.processed_allnum,"tarIndex");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
-	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
-	
+	char data[100];
+//	
+//	/*如果还是不行就变成，每次进行这个申请就只是编辑字符串*/
+//	
+//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"progress");  /* 暂时未想好怎么写 */
+//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",10,"size");
+//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.Parse_num,"startIndex");
+//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",waypoints_run_status.processed_allnum,"tarIndex");
+//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.taskId,"taskId");
+//	Json_data_Change(EC600U_HTTP_updateRoute,"%d%s",HTTP_Task_Msg.zoneId,"zoneId");
+//	
 
-	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
-	if(trans_Msg != NULL)
-	{
+//	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
+//	if(trans_Msg != NULL)
+//	{
+		insert_str(UPDATE_ROUTE_PARAM("\0","\0","\0","\0","\0","\0"),data,"%f%d%d%d%d%d",10,10,waypoints_run_status.Parse_num,waypoints_run_status.processed_allnum,HTTP_Task_Msg.taskId,HTTP_Task_Msg.zoneId);
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
-		HTTP_post(UPDATEROUTE_URL,trans_Msg,Header);
-	}
-	cJSON_free(trans_Msg);
+		HTTP_post(UPDATEROUTE_URL,data,Header);
+//	}
+//	cJSON_free(trans_Msg);
 }
 
 /*获取充电桩消息发送*/

@@ -327,13 +327,13 @@ NAV_output_t NAV_Control()
 		//Speed目前手动给值
 		if(Device_Run_Status.Curstatus == Job_Return && waypoints_run_status.processed_allnum >= 1 ) //说明在返航中到达了第一个点，需要调转车头，将车尾作为车头进行行走，左右轮需要调换，RTK导航方向需要掉头
 		{
-			NAV_output.RSpeed =  Speed + Angle;
-			NAV_output.LSpeed =  Speed - Angle;
+			NAV_output.RSpeed =  Speed - Angle;
+			NAV_output.LSpeed =  Speed + Angle;
 		}
 		else
 		{
-			NAV_output.RSpeed =  Speed - Angle;
-			NAV_output.LSpeed =  Speed + Angle;
+			NAV_output.RSpeed =  Speed + Angle;
+			NAV_output.LSpeed =  Speed - Angle;
 		}
 
 		/*进度计算*/
