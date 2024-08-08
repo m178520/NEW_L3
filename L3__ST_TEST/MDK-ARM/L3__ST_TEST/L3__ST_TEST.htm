@@ -3,7 +3,7 @@
 <title>Static Call Graph - [L3__ST_TEST\L3__ST_TEST.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image L3__ST_TEST\L3__ST_TEST.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Aug 07 18:01:34 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Aug 08 16:49:15 2024
 <BR><P>
 <H3>Maximum Stack Usage =       2088 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -802,7 +802,10 @@ Global Symbols
 <LI><a href="#[1ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_SetValuestring
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;waypoints_Parse
+<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;change_status_fun
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
+<LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
+<LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_get
 <LI><a href="#[211]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cJSON_ParseWithOpts
 <LI><a href="#[250]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;update_offset
 <LI><a href="#[24f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;print_value
@@ -1106,8 +1109,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StringToObject
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsGet
-<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreAcquire
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreAcquire
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
 </UL>
@@ -1164,9 +1167,9 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 2088<LI>Call Chain = Device_Run_task &rArr; NAV_Control &rArr; pointToline_distance &rArr; GPStoXY &rArr; geod_inverse &rArr; geod_geninverse &rArr; geod_geninverse_int &rArr; Lambda12 &rArr; Lengths &rArr; C2f
 </UL>
 <BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Direct_Drive_motor
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreAcquire
 <LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsWait
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NAV_Control
 <LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_TogglePin
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_send_data_apply
@@ -1175,13 +1178,13 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
 <P><STRONG><a name="[b0]"></a>Device_unusual_task</STRONG> (Thumb, 92 bytes, Stack size 0 bytes, freertos.o(i.Device_unusual_task))
-<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = Device_unusual_task &rArr; change_status_fun &rArr; Json_data_Change &rArr; cJSON_SetValuestring &rArr; cJSON_strdup &rArr; memcpy
+<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = Device_unusual_task &rArr; change_status_fun &rArr; Json_data_Change &rArr; cJSON_SetValuestring &rArr; cJSON_strdup &rArr; memcpy
 </UL>
 <BR>[Calls]<UL><LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsSet
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsClear
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;change_status_fun
 <LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsWait
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_TogglePin
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
@@ -1204,8 +1207,8 @@ Global Symbols
 <LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsGet
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsClear
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
@@ -1214,13 +1217,13 @@ Global Symbols
 <P><STRONG><a name="[b1]"></a>EC600U_SEND_task</STRONG> (Thumb, 80 bytes, Stack size 8 bytes, freertos.o(i.EC600U_SEND_task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = EC600U_SEND_task &rArr; osMessageQueueGet &rArr; xQueueReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<BR>[Calls]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit_DMA
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[ee]"></a>EC600U_send_msg</STRONG> (Thumb, 68 bytes, Stack size 32 bytes, uart_data.o(i.EC600U_send_msg))
+<P><STRONG><a name="[ee]"></a>EC600U_send_msg</STRONG> (Thumb, 70 bytes, Stack size 32 bytes, uart_data.o(i.EC600U_send_msg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart4_send_data_apply
@@ -1315,8 +1318,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsSet
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsClear
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_GPS_data
 <LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop_IT
 <LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
@@ -2066,11 +2069,11 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ad]"></a>HTTP_REQUEST_task</STRONG> (Thumb, 126 bytes, Stack size 8 bytes, freertos.o(i.HTTP_REQUEST_task))
-<BR><BR>[Stack]<UL><LI>Max Depth = 1104<LI>Call Chain = HTTP_REQUEST_task &rArr; HTTP_goToCharge_Request &rArr; HTTP_get &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 1152<LI>Call Chain = HTTP_REQUEST_task &rArr; HTTP_goToCharge_Request &rArr; HTTP_get &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
+<BR>[Calls]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsWait
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[19f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_updateRoute_Request
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_jobStart_Request
 <LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_jobPause_Request
@@ -2081,18 +2084,19 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[1a1]"></a>HTTP_get</STRONG> (Thumb, 58 bytes, Stack size 536 bytes, http.o(i.HTTP_get))
+<P><STRONG><a name="[1a1]"></a>HTTP_get</STRONG> (Thumb, 62 bytes, Stack size 536 bytes, http.o(i.HTTP_get))
 <BR><BR>[Stack]<UL><LI>Max Depth = 720<LI>Call Chain = HTTP_get &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EC600U_send_msg
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 <LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_goToCharge_Request
 </UL>
 
-<P><STRONG><a name="[1a0]"></a>HTTP_goToCharge_Request</STRONG> (Thumb, 82 bytes, Stack size 376 bytes, http.o(i.HTTP_goToCharge_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 1096<LI>Call Chain = HTTP_goToCharge_Request &rArr; HTTP_get &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[1a0]"></a>HTTP_goToCharge_Request</STRONG> (Thumb, 82 bytes, Stack size 424 bytes, http.o(i.HTTP_goToCharge_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 1144<LI>Call Chain = HTTP_goToCharge_Request &rArr; HTTP_get &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_get
@@ -2101,8 +2105,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19d]"></a>HTTP_jobContinue_Request</STRONG> (Thumb, 60 bytes, Stack size 216 bytes, http.o(i.HTTP_jobContinue_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 936<LI>Call Chain = HTTP_jobContinue_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[19d]"></a>HTTP_jobContinue_Request</STRONG> (Thumb, 60 bytes, Stack size 264 bytes, http.o(i.HTTP_jobContinue_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 984<LI>Call Chain = HTTP_jobContinue_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
@@ -2121,12 +2125,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19c]"></a>HTTP_jobPause_Request</STRONG> (Thumb, 104 bytes, Stack size 296 bytes, http.o(i.HTTP_jobPause_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 1016<LI>Call Chain = HTTP_jobPause_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[19c]"></a>HTTP_jobPause_Request</STRONG> (Thumb, 76 bytes, Stack size 384 bytes, http.o(i.HTTP_jobPause_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 1104<LI>Call Chain = HTTP_jobPause_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
-<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_strtod
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
@@ -2141,11 +2144,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_REQUEST_task
 </UL>
 
-<P><STRONG><a name="[19a]"></a>HTTP_post</STRONG> (Thumb, 58 bytes, Stack size 536 bytes, http.o(i.HTTP_post))
+<P><STRONG><a name="[19a]"></a>HTTP_post</STRONG> (Thumb, 62 bytes, Stack size 536 bytes, http.o(i.HTTP_post))
 <BR><BR>[Stack]<UL><LI>Max Depth = 720<LI>Call Chain = HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EC600U_send_msg
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 <LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[19f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_updateRoute_Request
@@ -2156,8 +2160,8 @@ Global Symbols
 <LI><a href="#[198]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_Authen_Request
 </UL>
 
-<P><STRONG><a name="[19f]"></a>HTTP_updateRoute_Request</STRONG> (Thumb, 72 bytes, Stack size 280 bytes, http.o(i.HTTP_updateRoute_Request))
-<BR><BR>[Stack]<UL><LI>Max Depth = 1000<LI>Call Chain = HTTP_updateRoute_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[19f]"></a>HTTP_updateRoute_Request</STRONG> (Thumb, 76 bytes, Stack size 384 bytes, http.o(i.HTTP_updateRoute_Request))
+<BR><BR>[Stack]<UL><LI>Max Depth = 1104<LI>Call Chain = HTTP_updateRoute_Request &rArr; HTTP_post &rArr; EC600U_send_msg &rArr; uart4_send_data_apply &rArr; osMessageQueuePut &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;insert_str
 <LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_post
@@ -2361,8 +2365,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = SBUS_Parse_task &rArr; sbus_parse &rArr; osSemaphoreRelease &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sbus_parse
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 <LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_ReceiveToIdle_DMA
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
@@ -2721,8 +2725,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = VCU_send_task &rArr; osSemaphoreAcquire &rArr; xQueueSemaphoreTake &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Direct_Drive_motor
-<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreAcquire
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osSemaphoreAcquire
 <LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_SendPacket
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
@@ -2968,7 +2972,6 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__strtod_int
 </UL>
 <BR>[Called By]<UL><LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NAV_Control
-<LI><a href="#[19c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTTP_jobPause_Request
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;APP_Info_Submit
 <LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pointToline_distance
 </UL>
@@ -3229,16 +3232,18 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VCU_send_task
 </UL>
 
-<P><STRONG><a name="[10e]"></a>change_status_fun</STRONG> (Thumb, 402 bytes, Stack size 32 bytes, change_status.o(i.change_status_fun))
-<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = change_status_fun &rArr; Json_data_Change &rArr; cJSON_SetValuestring &rArr; cJSON_strdup &rArr; memcpy
+<P><STRONG><a name="[10e]"></a>change_status_fun</STRONG> (Thumb, 634 bytes, Stack size 48 bytes, change_status.o(i.change_status_fun))
+<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = change_status_fun &rArr; Json_data_Change &rArr; cJSON_SetValuestring &rArr; cJSON_strdup &rArr; memcpy
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;waypoints_Parse
 <LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
 <LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsSet
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsGet
 <LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osEventFlagsClear
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[1cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NAV_Control_Param_clear
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Json_data_Change
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Device_unusual_task
 </UL>
@@ -3388,7 +3393,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[22a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VCU_send_task
+<BR>[Called By]<UL><LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;change_status_fun
+<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VCU_send_task
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartDefaultTask
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SBUS_Parse_task
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Power_Check_task
@@ -3685,7 +3691,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[247]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_number
 </UL>
 
-<P><STRONG><a name="[1ca]"></a>tracking_control_Arith</STRONG> (Thumb, 534 bytes, Stack size 176 bytes, nav.o(i.tracking_control_Arith))
+<P><STRONG><a name="[1ca]"></a>tracking_control_Arith</STRONG> (Thumb, 558 bytes, Stack size 176 bytes, nav.o(i.tracking_control_Arith))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = tracking_control_Arith &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; fabs
 </UL>
 <BR>[Calls]<UL><LI><a href="#[27b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vertical_line_fun

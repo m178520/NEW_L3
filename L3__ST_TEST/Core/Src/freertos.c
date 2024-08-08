@@ -106,7 +106,7 @@ osThreadId_t HTTP_REQUESTHandle;
 const osThreadAttr_t HTTP_REQUEST_attributes = {
   .name = "HTTP_REQUEST",
   .stack_size = 400 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal,
+  .priority = (osPriority_t) osPriorityBelowNormal,
 };
 /* Definitions for APP_Info_Submit */
 osThreadId_t APP_Info_SubmitHandle;

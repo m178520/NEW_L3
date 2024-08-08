@@ -153,8 +153,8 @@ pointToline_distance_t pointToline_distance(double Vehicle_lat,double Vehicle_lo
 			Angle = - (gnss_Angle-90);
 		}
 		//将车坐标系作为车辆的点，下面两句是以后接收机位置为基点进行平移坐标系
-		Vehicle_XY.x += 1.2 * cos(Angle * PI / 180);
-		Vehicle_XY.y += 1.2 * sin(Angle * PI / 180);
+		Vehicle_XY.x += 1.5 * cos(Angle * PI / 180);
+		Vehicle_XY.y += 1.5 * sin(Angle * PI / 180);
 	}
 	
 	pointToline_info.gnss_Angle = gnss_Angle;
@@ -190,7 +190,6 @@ tracking_control_t tracking_control_Arith(PID_TypeDef *PID_InitStruct,pointTolin
 {
 	double lenght = FIXED_LENGHT;
 	double atan_value = 0;
-	if(info.pointToline < 0.5) lenght *=2;
 	tracking_control_t tracking_control = {0};
 	#if CONTROL_WAY == 0 //直接拐 在线的左边就向右拐 距离作为拐弯的大小值
 		/*偏离航信过大，就打满方向*/
@@ -276,6 +275,11 @@ tracking_control_t tracking_control_Arith(PID_TypeDef *PID_InitStruct,pointTolin
 			tracking_control.direct =  -tracking_control.direct;
 			tracking_control.value  =  360 - fabs_err; /*0-180*/
 		}
+
+			if(tracking_control.value > 60) //如果转弯量大于了60度不要让他转太猛
+			{
+				tracking_control.value /=2; 
+			}
 		
 	#endif
 	return tracking_control;

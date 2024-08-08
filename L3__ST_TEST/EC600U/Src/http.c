@@ -29,21 +29,21 @@ void HTTP_get(char* url,char* data,char *Header)
 {
 	char q[512] = {0};
 	insert_str( HTTP_REQUEST_MSG("\0","\0","\0"),q,"%s%s%s",url,data,Header);
-	EC600U_send_msg("HTTP","get",q,600);
+	EC600U_send_msg("HTTP","get",q,strlen(q));
 }
 
 void HTTP_post(char* url,char* data,char *Header)
 {
 	char q[512] = {0};
 	insert_str( HTTP_REQUEST_MSG("\0","\0","\0"),q,"%s%s%s",url,data,Header);
-	EC600U_send_msg("HTTP","post",q,600);
+	EC600U_send_msg("HTTP","post",q,strlen(q));
 }
 
 void HTTP_put(char* url,char* data,char *Header)
 {
 	char q[512] = {0};
 	insert_str( HTTP_REQUEST_MSG("\0","\0","\0"),q,"%s%s%s",url,data,Header);
-	EC600U_send_msg("HTTP","get",q,600);
+	EC600U_send_msg("HTTP","get",q,strlen(q));
 }
 
 /*鉴权消息发送*/
@@ -69,7 +69,7 @@ void HTTP_jobPause_Request(void)
 {
 	char Header[150];
 //	char *trans_Msg;
-	char  data[100];
+	char  data[200];
 //	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lat,NULL),"pauseLat"); 
 //	Json_data_Change(EC600U_HTTP_jobPause,"%f%s",strtod(gnss.Lon,NULL),"pauseLon");
 //	Json_data_Change(EC600U_HTTP_jobPause,"%d%s",waypoints_run_status.processed_allnum,"progress");
@@ -80,7 +80,7 @@ void HTTP_jobPause_Request(void)
 //	trans_Msg = ObjectToString(EC600U_HTTP_jobPause);
 //	if(trans_Msg != NULL)
 //	{
-		insert_str(PAUSE_PARAM("\0","\0","\0","\0","\0"),data,"%f%f%f%d%d",strtod(gnss.Lat,NULL),strtod(gnss.Lon,NULL),waypoints_run_status.processed_allnum,waypoints_run_status.processed_allnum,HTTP_Task_Msg.zoneId);
+		insert_str(PAUSE_PARAM("\0","\0","\0","\0","\0"),data,"%s%s%f%d%d",gnss.Lat,gnss.Lon,(double)0.0,waypoints_run_status.processed_allnum,HTTP_Task_Msg.zoneId);
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
 		HTTP_post(JOBPAUSE_URL,data,Header);
 //	}
@@ -90,7 +90,7 @@ void HTTP_jobPause_Request(void)
 /*继续工作消息发送*/
 void HTTP_jobContinue_Request(void)
 {
-	char data[50];
+	char data[100];
 	char Header[150];
 	sprintf(data,"%c%s%d%c",'"',"zoneId=",MQTT_Task_Msg.zoneId,'"');
 	insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d", "application/x-www-form-urlencoded;charset=UTF-8" ,Authen_info.deviceId,Authen_info.groupId);
@@ -111,7 +111,7 @@ void HTTP_jobFinish_Request(void)
 void HTTP_updateRoute_Request(void)
 {
 	char Header[150];
-	char data[100];
+	char data[200];
 //	
 //	/*如果还是不行就变成，每次进行这个申请就只是编辑字符串*/
 //	
@@ -126,7 +126,7 @@ void HTTP_updateRoute_Request(void)
 //	trans_Msg = ObjectToString(EC600U_HTTP_updateRoute);
 //	if(trans_Msg != NULL)
 //	{
-		insert_str(UPDATE_ROUTE_PARAM("\0","\0","\0","\0","\0","\0"),data,"%f%d%d%d%d%d",10,10,waypoints_run_status.Parse_num,waypoints_run_status.processed_allnum,HTTP_Task_Msg.taskId,HTTP_Task_Msg.zoneId);
+		insert_str(UPDATE_ROUTE_PARAM("\0","\0","\0","\0","\0","\0"),data,"%f%d%d%d%d%d",(double)10,10,waypoints_run_status.Parse_num,waypoints_run_status.processed_allnum,HTTP_Task_Msg.taskId,HTTP_Task_Msg.zoneId);
 		insert_str(HTTP_REQUEST_HEADER_MSG("\0","\0","\0"),Header,"%s%d%d","application/json",Authen_info.deviceId,Authen_info.groupId);
 		HTTP_post(UPDATEROUTE_URL,data,Header);
 //	}
@@ -136,7 +136,7 @@ void HTTP_updateRoute_Request(void)
 /*获取充电桩消息发送*/
 void HTTP_goToCharge_Request(void)
 {
-	char data[50];
+	char data[100];
 	char url[150];
 	char Header[150];
 //	sprintf(data,"%c%s%d%c%s%d%c",'{',"\"zoneId\":",MQTT_Task_Msg.zoneId,',',"\"tarIndex\":",waypoints_run_status.current_toindex,'}');
@@ -412,7 +412,7 @@ void USART_HTTP_jobFinish_data(cJSON * object)
 		request_num = 0;
 		printf("完成作业\r\n");
 		/*进行状态变换*/
-		Device_Run_Status.Alterstatus = Job_Wait;
+		Device_Run_Status.Alterstatus = Job_Finish;
 		osEventFlagsSet(Device_unusual_status_eventHandle,BIT_1);              //触发状态变换
 	}
 	else  printf("请求失败\r\n");

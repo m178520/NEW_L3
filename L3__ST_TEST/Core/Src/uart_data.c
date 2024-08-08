@@ -117,7 +117,7 @@ void uart4_rec_data_apply(uint8_t *data,uint16_t len)
 /*EC600U数据格式包装并以队列形式发送*/
 void EC600U_send_msg(char* Name,char* fun,char *Source,uint16_t len)
 {
-	uint8_t *grade = (uint8_t *)my_malloc(len * sizeof(char),__FUNCTION__, __LINE__);
+	uint8_t *grade = (uint8_t *)my_malloc((len + 100)  * sizeof(char),__FUNCTION__, __LINE__);
 	insert_str(ST_EC600("\0","\0","\0"),(char *)grade,"%s%s%s",Name,fun,Source);
 	uart4_send_data_apply(grade,strlen((char*)grade));
 	my_free(grade,__FUNCTION__, __LINE__);

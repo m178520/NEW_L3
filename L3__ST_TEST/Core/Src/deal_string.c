@@ -111,7 +111,7 @@ void insert_str(char *str,char* q,char const* const_Format, ...)
 			else if(Format[j] == 'f')
 			{
 				f_number= va_arg(ap,double);
-				sprintf(q,"%s%f%s",q,f_number,str+num);
+				sprintf(q,"%s%.9f%s",q,f_number,str+num);
 			}
 		}
 	}
